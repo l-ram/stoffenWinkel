@@ -7,7 +7,7 @@ import "./App.css";
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<Navbar isSignedIn={true} />}>
+      <Route path="/" element={<Navbar isSignedIn={false} />}>
         <Route index element={<Home />} />
       </Route>
     </Routes>
