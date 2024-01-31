@@ -1,8 +1,17 @@
 import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./pages/Navigation/Navbar";
+import Home from "./pages/Home";
 import "./App.css";
 
 const App = () => {
-  return <div></div>;
+  return (
+    <Routes>
+      <Route path="/" element={<Navbar isSignedIn={true} />}>
+        <Route index element={<Home />} />
+      </Route>
+    </Routes>
+  );
 };
 
 export default App;
