@@ -1,7 +1,10 @@
 import { FormEvent, useState } from "react";
 import { supabase } from "../config/supabase.config";
+import { useNavigate } from "react-router-dom";
 
 const LoginRegister = () => {
+  let navigate = useNavigate();
+
   const [emailRegisterData, setEmailRegisterData] = useState({
     firstName: "",
     lastName: "",
@@ -25,20 +28,22 @@ const LoginRegister = () => {
     });
   };
 
+  //   Submit to backend
   const handleEmailRegister = async (event: FormEvent) => {
     event.preventDefault();
     try {
       const { data, error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
+        email: emailRegisterData.email,
+        password: emailRegisterData.password,
         options: {
           data: {
-            first_name: formData.firstName,
-            last_name: formData.lastName,
+            first_name: emailRegisterData.firstName,
+            last_name: emailRegisterData.lastName,
           },
         },
       });
       alert("Your account has been created!");
+      navigate("/");
     } catch (error) {
       alert(error);
     }
@@ -57,6 +62,7 @@ const LoginRegister = () => {
 
   console.log(emailLoginData);
 
+  //   Submit to backend
   const handleEmailLogin = async (event: FormEvent) => {
     event.preventDefault();
     console.log("login ran");
@@ -66,6 +72,7 @@ const LoginRegister = () => {
         password: emailLoginData.password,
       });
       alert(`You are logged in!: ${data}`);
+      navigate("/");
       console.log("Supabase response:", data);
     } catch (error) {
       alert(error);
@@ -73,6 +80,7 @@ const LoginRegister = () => {
   };
 
   console.log(emailLoginData);
+
   return (
     <div>
       <h2>Welcome back! Sign in here</h2>
