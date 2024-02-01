@@ -1,6 +1,6 @@
 import UserSummary from "../../components/Navigation/UserSummary";
-import { supabase } from "../../config/supabase.config";
-
+import { googleLogin } from "../../config/supabase.config";
+import { Link } from "react-router-dom";
 interface NavBar {
   isSignedIn: boolean;
 }
@@ -8,15 +8,42 @@ interface NavBar {
 const Navbar = (props: NavBar) => {
   const { isSignedIn } = props;
 
-  const googleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
-  };
-
   return (
-    <div>
-      <button onClick={googleLogin}>{isSignedIn ? "Log-out" : "Log-in"}</button>
+    <div
+      style={{
+        backgroundColor: "aquamarine",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Link to="/">
+        <h2
+          style={{
+            padding: 5,
+          }}
+        >
+          Home
+        </h2>
+      </Link>
+      <h2
+        style={{
+          padding: 5,
+        }}
+      >
+        Products
+      </h2>
+      <h2
+        style={{
+          padding: 5,
+        }}
+      >
+        Basket
+      </h2>
+      <Link to="/loginRegister">
+        <button>{isSignedIn ? "Log-out" : "Log-in"}</button>
+      </Link>
       <UserSummary isSignedIn={isSignedIn} />
     </div>
   );

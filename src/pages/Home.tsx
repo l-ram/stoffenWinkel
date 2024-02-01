@@ -1,5 +1,9 @@
 const Home = () => {
-  return <div></div>;
+  return (
+    <div style={{ backgroundColor: "blueviolet" }}>
+      Welcome to De Stoffen Winkel
+    </div>
+  );
 };
 
 export default Home;
