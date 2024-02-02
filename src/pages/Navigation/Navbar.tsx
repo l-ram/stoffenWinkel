@@ -1,12 +1,26 @@
+import { useEffect, useState } from "react";
 import UserSummary from "../../components/Navigation/UserSummary";
-import { googleLogin } from "../../config/supabase.config";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 interface NavBar {
-  isSignedIn: boolean;
+  token?: {};
 }
 
-const Navbar = (props: NavBar) => {
-  const { isSignedIn } = props;
+const Navbar = ({ token }: NavBar) => {
+  console.log("navbar token check:", token);
+  const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      setIsSignedIn(true);
+    }
+  }, [token]);
+
+  const handleEmailLogout = () => {
+    sessionStorage.removeItem("user_token");
+    navigate("/");
+  };
 
   return (
     <div
@@ -27,24 +41,34 @@ const Navbar = (props: NavBar) => {
           Home
         </h2>
       </Link>
-      <h2
-        style={{
-          padding: 5,
-        }}
-      >
-        Products
-      </h2>
-      <h2
-        style={{
-          padding: 5,
-        }}
-      >
-        Basket
-      </h2>
-      <Link to="/loginRegister">
-        <button>{isSignedIn ? "Log-out" : "Log-in"}</button>
+      <Link to="/products">
+        <h2
+          style={{
+            padding: 5,
+          }}
+        >
+          Products
+        </h2>
       </Link>
-      <UserSummary isSignedIn={isSignedIn} />
+      <Link to="/basket">
+        <h2
+          style={{
+            padding: 5,
+          }}
+        >
+          Basket
+        </h2>
+      </Link>
+
+      {isSignedIn ? (
+        <button onClick={handleEmailLogout}>Log-out</button>
+      ) : (
+        <Link to="/loginRegister">
+          <button>{isSignedIn ? "Log-out" : "Log-in"}</button>
+        </Link>
+      )}
+
+      <UserSummary token={token} isSignedIn={isSignedIn} />
     </div>
   );
 };

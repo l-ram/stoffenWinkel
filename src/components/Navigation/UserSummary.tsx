@@ -1,9 +1,17 @@
+import { User, Session } from "@supabase/supabase-js";
+import { useEffect } from "react";
+
 interface UserSummary {
   isSignedIn: boolean;
+  token: any;
 }
 
 const UserSummary = (props: UserSummary) => {
-  const { isSignedIn } = props;
+  const { isSignedIn, token } = props;
+
+  const session: Session = JSON.parse(
+    sessionStorage.getItem("user_token") as string
+  );
 
   const UserSignedIn = () => {
     return (
@@ -12,7 +20,10 @@ const UserSummary = (props: UserSummary) => {
           height="100%"
           src="https://avatars.githubusercontent.com/u/95079074?v=4"
         ></img>
-        <h5>Welcome back User!</h5>
+        <h5>
+          Welcome back{" "}
+          {(session.user as User).user_metadata.first_name as string}!
+        </h5>
       </>
     );
   };

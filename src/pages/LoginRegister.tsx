@@ -2,7 +2,11 @@ import { FormEvent, useState } from "react";
 import { supabase } from "../config/supabase.config";
 import { useNavigate } from "react-router-dom";
 
-const LoginRegister = () => {
+interface LoginRegister {
+  setToken: (param: any) => any;
+}
+
+const LoginRegister = ({ setToken }: LoginRegister) => {
   let navigate = useNavigate();
 
   const [emailRegisterData, setEmailRegisterData] = useState({
@@ -32,7 +36,7 @@ const LoginRegister = () => {
   const handleEmailRegister = async (event: FormEvent) => {
     event.preventDefault();
     try {
-      const { data, error } = await supabase.auth.signUp({
+      await supabase.auth.signUp({
         email: emailRegisterData.email,
         password: emailRegisterData.password,
         options: {
@@ -60,8 +64,6 @@ const LoginRegister = () => {
     });
   };
 
-  console.log(emailLoginData);
-
   //   Submit to backend
   const handleEmailLogin = async (event: FormEvent) => {
     event.preventDefault();
@@ -71,15 +73,19 @@ const LoginRegister = () => {
         email: emailLoginData.email,
         password: emailLoginData.password,
       });
-      alert(`You are logged in!: ${data}`);
-      navigate("/");
-      console.log("Supabase response:", data);
+      if (error) {
+        alert(error.message);
+        navigate("/");
+      } else {
+        setToken(data);
+        alert("You are logged in!");
+        console.log("Supabase response:", data);
+        navigate("/");
+      }
     } catch (error) {
       alert(error);
     }
   };
-
-  console.log(emailLoginData);
 
   return (
     <div>
