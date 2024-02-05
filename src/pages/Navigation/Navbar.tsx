@@ -1,25 +1,23 @@
-import { useEffect, useState } from "react";
+import { useSession } from "../../context/SessionContext";
+
 import UserSummary from "../../components/Navigation/UserSummary";
 import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "../../config/supabase.config";
 
-interface NavBar {
-  token?: {};
-}
+interface NavBar {}
 
-const Navbar = ({ token }: NavBar) => {
-  console.log("navbar token check:", token);
-  const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
+const Navbar = ({}: NavBar) => {
+  const session = useSession();
+
   let navigate = useNavigate();
 
-  useEffect(() => {
-    if (token) {
-      setIsSignedIn(true);
+  const handleEmailLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      alert(error);
+    } else {
+      navigate("/");
     }
-  }, [token]);
-
-  const handleEmailLogout = () => {
-    sessionStorage.removeItem("user_token");
-    navigate("/");
   };
 
   return (
@@ -50,6 +48,15 @@ const Navbar = ({ token }: NavBar) => {
           Products
         </h2>
       </Link>
+      <Link to="/order">
+        <h2
+          style={{
+            padding: 5,
+          }}
+        >
+          Order
+        </h2>
+      </Link>
       <Link to="/basket">
         <h2
           style={{
@@ -60,15 +67,15 @@ const Navbar = ({ token }: NavBar) => {
         </h2>
       </Link>
 
-      {isSignedIn ? (
+      {session ? (
         <button onClick={handleEmailLogout}>Log-out</button>
       ) : (
         <Link to="/loginRegister">
-          <button>{isSignedIn ? "Log-out" : "Log-in"}</button>
+          <button>Log-in</button>
         </Link>
       )}
 
-      <UserSummary token={token} isSignedIn={isSignedIn} />
+      <UserSummary />
     </div>
   );
 };

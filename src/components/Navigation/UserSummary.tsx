@@ -1,17 +1,9 @@
-import { User, Session } from "@supabase/supabase-js";
-import { useEffect } from "react";
+import { useSession } from "../../context/SessionContext";
 
-interface UserSummary {
-  isSignedIn: boolean;
-  token: any;
-}
+interface UserSummary {}
 
-const UserSummary = (props: UserSummary) => {
-  const { isSignedIn, token } = props;
-
-  const session: Session = JSON.parse(
-    sessionStorage.getItem("user_token") as string
-  );
+const UserSummary = ({}: UserSummary) => {
+  const session = useSession();
 
   const UserSignedIn = () => {
     return (
@@ -22,7 +14,7 @@ const UserSummary = (props: UserSummary) => {
         ></img>
         <h5>
           Welcome back{" "}
-          {(session.user as User).user_metadata.first_name as string}!
+          {/* {(session.user as User).user_metadata.first_name as string}! */}
         </h5>
       </>
     );
@@ -39,7 +31,7 @@ const UserSummary = (props: UserSummary) => {
         background: "pink",
       }}
     >
-      {isSignedIn ? <UserSignedIn /> : <h5>No account? Register!</h5>}
+      {session ? <UserSignedIn /> : <h5>No account? Register!</h5>}
     </div>
   );
 };

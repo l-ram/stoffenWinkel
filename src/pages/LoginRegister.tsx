@@ -2,11 +2,9 @@ import { FormEvent, useState } from "react";
 import { supabase } from "../config/supabase.config";
 import { useNavigate } from "react-router-dom";
 
-interface LoginRegister {
-  setToken: (param: any) => any;
-}
+interface LoginRegister {}
 
-const LoginRegister = ({ setToken }: LoginRegister) => {
+const LoginRegister = ({}: LoginRegister) => {
   let navigate = useNavigate();
 
   const [emailRegisterData, setEmailRegisterData] = useState({
@@ -77,7 +75,6 @@ const LoginRegister = ({ setToken }: LoginRegister) => {
         alert(error.message);
         navigate("/");
       } else {
-        setToken(data);
         alert("You are logged in!");
         console.log("Supabase response:", data);
         navigate("/");
