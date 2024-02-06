@@ -1,12 +1,24 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useSession } from "../context/SessionContext";
 import { supabase } from "../config/supabase.config";
 import { useNavigate } from "react-router-dom";
-import { timeStamp } from "console";
+
+interface OrderTable {
+  order_id: number;
+  user_id: string;
+  product: string;
+  quantity: number;
+  shipping_address: string;
+}
 
 const TestOrder = () => {
   const session = useSession();
-  const [orderData, setOrderData] = useState({
+
+  const [orderData, setOrderData] = useState<{
+    product: string;
+    shipping_address: string;
+    quantity: number;
+  }>({
     product: "",
     shipping_address: "",
     quantity: 0,
@@ -28,14 +40,15 @@ const TestOrder = () => {
     event.preventDefault();
 
     const { data, error } = await supabase
-      .from("orders")
+      .from("testOrder")
       .insert({
-        user_id: session?.user.id,
+        // user_id: session?.user.id,
+        // shipping_address: orderData.shipping_address,
+        // payment_state: "accepted",
         shipping_address: orderData.shipping_address,
-        payment_state: "accepted",
-        number_of_items: orderData.quantity,
-        order_date: `(to_timestamp(${Date.now()} /1000 ))`,
-        order_total: () => orderData.quantity * 7.25,
+        product: orderData.product,
+        quantity: orderData.quantity,
+        // order_date: `(to_timestamp(${Date.now()} /1000 ))`,
       })
       .select();
     console.log(data);
@@ -44,6 +57,26 @@ const TestOrder = () => {
       navigate("/orders");
     }
   };
+
+  const [orderHistory, setOrderHistory] = useState<OrderTable[]>([]);
+
+  useEffect(() => {
+    const getOrderHistory = async () => {
+      const { data, error } = await supabase
+        .from("testOrder")
+        .select("*")
+        .returns<OrderTable[]>();
+      console.log(data);
+      if (data === null || error) {
+        alert(error.message);
+      } else {
+        setOrderHistory(data);
+      }
+    };
+    getOrderHistory();
+  }, []);
+
+  console.log("Order history:", orderHistory);
 
   return (
     <div>
@@ -71,6 +104,19 @@ const TestOrder = () => {
           />
 
           <button>Order!</button>
+
+          <br />
+
+          <h1>Order History</h1>
+
+          {orderHistory.map((x) => (
+            <div style={{ backgroundColor: "lightcyan" }}>
+              <h5>Order Id: {x.order_id}</h5>
+              <h2 style={{ color: "purple" }}>{x.product}</h2>
+              <h3>Amount: {x.quantity}</h3>
+              <h4>Address: {x.shipping_address}</h4>
+            </div>
+          ))}
         </form>
       )}
 

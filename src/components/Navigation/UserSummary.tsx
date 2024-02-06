@@ -1,4 +1,5 @@
 import { useSession } from "../../context/SessionContext";
+import { Link } from "react-router-dom";
 
 interface UserSummary {}
 
@@ -16,6 +17,9 @@ const UserSummary = ({}: UserSummary) => {
           Welcome back{" "}
           {/* {(session.user as User).user_metadata.first_name as string}! */}
         </h5>
+        <Link to="/account">
+          <h5>Account</h5>
+        </Link>
       </>
     );
   };

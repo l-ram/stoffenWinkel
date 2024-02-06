@@ -48,15 +48,6 @@ const Navbar = ({}: NavBar) => {
           Products
         </h2>
       </Link>
-      <Link to="/order">
-        <h2
-          style={{
-            padding: 5,
-          }}
-        >
-          Order
-        </h2>
-      </Link>
       <Link to="/basket">
         <h2
           style={{
