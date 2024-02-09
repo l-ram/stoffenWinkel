@@ -1,7 +1,5 @@
 import { supabase } from "../config/supabase.config";
 
-export const getBasket = async () => {};
-
 export const addToBasket = async (product_id: number) => {
   const { data: existingProduct, error } = await supabase
     .from("basket")
@@ -37,16 +35,14 @@ export const addToBasket = async (product_id: number) => {
     if (catalog) {
       const { data, error } = await supabase
         .from("basket")
-        .insert([
-          {
-            product_id: catalog[0].product_id,
-            image_url: catalog[0].image_url as string,
-            quantity: 1,
-            category_id: catalog[0].category_id as string,
-            name: catalog[0].name as string,
-            price: catalog[0].price as number,
-          },
-        ])
+        .insert({
+          product_id: catalog[0].product_id,
+          image_url: catalog[0].image_url as string,
+          quantity: 1,
+          category_id: catalog[0].category_id as string,
+          name: catalog[0].name as string,
+          price: catalog[0].price as number,
+        })
         .select("*");
 
       if (error) {
