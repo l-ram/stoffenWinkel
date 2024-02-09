@@ -1,5 +1,9 @@
 const Basket = () => {
-  return <div>Shopping basket</div>;
+  return (
+    <div>
+      <h1>Shopping basket</h1>
+    </div>
+  );
 };
 
 export default Basket;

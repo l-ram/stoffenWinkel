@@ -24,6 +24,7 @@ const Profile = () => {
   });
 
   console.log(profileForm);
+
   const handleUploadAvatar = async (event: any) => {
     const avatarFile = event.target.files[0];
 
@@ -52,32 +53,13 @@ const Profile = () => {
 
   const handleProfileUpdate = async (event: FormEvent) => {
     event.preventDefault();
-
-    const { data } = await supabase.from("users").select();
-
-    console.log("Check if row exists:", data);
-
-    if (data.length < 1) {
-      console.log("doesn't exist, running insert");
-      const { data, error } = await supabase
-        .from("users")
-        .insert({
-          user_id: session?.user.id,
-          first_name: profileForm.first_name,
-          second_name: profileForm.second_name,
-          birth_date: profileForm.birth_date,
-          shipping_address: profileForm.shipping_address,
-          country: profileForm.country,
-          payment_type: profileForm.payment_type,
-        })
-        .select();
-      console.log(data);
-      if (error) {
-        alert(error.message);
-      } else {
-        alert("Profile updated!");
-      }
-    } else {
+    const { data } = await supabase
+      .from("users")
+      .select("*")
+      .eq("user_id", session?.user.id);
+    console.log("select ran", data);
+    if (data?.length > 0) {
+      console.log("users exists, run update");
       const { data, error } = await supabase
         .from("users")
         .update({
@@ -90,7 +72,27 @@ const Profile = () => {
         })
         .eq("user_id", session?.user.id)
         .select();
-      console.log(data);
+      console.log("update finished", data);
+      if (error) {
+        alert(error.message);
+      } else {
+        alert("Profile updated!");
+      }
+    } else {
+      console.log("user doesn't exists, running insert");
+      const { data, error } = await supabase
+        .from("users")
+        .insert({
+          user_id: session?.user.id,
+          first_name: profileForm.first_name,
+          second_name: profileForm.second_name,
+          birth_date: profileForm.birth_date,
+          shipping_address: profileForm.shipping_address,
+          country: profileForm.country,
+          payment_type: profileForm.payment_type,
+        })
+        .select();
+      console.log("insert finished", data);
       if (error) {
         alert(error.message);
       } else {

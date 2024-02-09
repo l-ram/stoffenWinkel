@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useSession } from "../../context/SessionContext";
 import { Link } from "react-router-dom";
 
@@ -5,18 +6,13 @@ interface UserSummary {}
 
 const UserSummary = ({}: UserSummary) => {
   const session = useSession();
+  const avatar = `https://igfmaugvvetikklloxpe.supabase.co/storage/v1/object/public/UserAvatars/${session?.user.id}`;
 
   const UserSignedIn = () => {
     return (
       <>
-        <img
-          height="100%"
-          src="https://avatars.githubusercontent.com/u/95079074?v=4"
-        ></img>
-        <h5>
-          Welcome back{" "}
-          {/* {(session.user as User).user_metadata.first_name as string}! */}
-        </h5>
+        <img height="100%" src={avatar}></img>
+        <h5>Welcome back {session?.user.user_metadata.first_name}!</h5>
         <Link to="/account">
           <h5>Account</h5>
         </Link>

@@ -1,55 +1,61 @@
 import { useEffect, useState } from "react";
+import { supabase } from "../config/supabase.config";
+import "../pages/products.css";
 
-interface fakeProducts {
-  id: number;
-  title: string;
+interface ProductsTable {
+  name: string;
+  product_id: number;
+  category_id: string;
   price: number;
-  category: string;
-  description: string;
-  image: string;
+  short_description: string;
+  long_description: string;
+  image_url: string;
 }
 
 const Products = () => {
-  const [data, setData] = useState<fakeProducts[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  // const [loading, setLoading] = useState<boolean>(true);
+
+  const [products, setproducts] = useState<ProductsTable[]>([]);
 
   useEffect(() => {
-    fetch("https://fakestoreapi.com/products/")
-      .then((res) => res.json())
-      .then((products) => setData(products))
-      .finally(() => {
-        setLoading(false);
-      });
+    const getProducts = async () => {
+      const { data, error } = await supabase
+        .from("catalog")
+        .select("*")
+        .returns<ProductsTable[]>();
+      if (data === null || error) {
+        alert(error.message);
+      } else {
+        setproducts(data);
+      }
+    };
+    getProducts();
   }, []);
 
-  const num: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-  console.log(data);
-
-  const convert = "one";
+  console.log("Products:", products);
 
   return (
     <div>
-      Products
-      {data.map((x) => (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            width: "75%",
-            borderStyle: "dashed",
-            border: "1, dashed, grey",
-            margin: 10,
-          }}
-          key={x.id}
-        >
-          <h1>{x.title}</h1>
-          <h2>{x.category}</h2>
-          <img width={"50%"} src={x.image}></img>
-          <span>{x.description}</span>
-        </div>
-      ))}
+      <main>
+        <section className="cards">
+          {products.map((product, idx) => (
+            <div key={idx} className="card">
+              <div className="card__image-container">
+                <img src={product.image_url} />
+              </div>
+              <div className="card__content">
+                <p className="card__title text--medium">
+                  {product.category_id}
+                </p>
+                <div className="card__info">
+                  <p className="text--medium">{product.name}</p>
+                  <p className="card__price text--medium">{product.price}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </section>
+      </main>
     </div>
   );
 };

@@ -1,13 +1,11 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { supabase } from "../config/supabase.config";
 import { useNavigate } from "react-router-dom";
-import { useSession } from "../context/SessionContext";
 
 interface LoginRegister {}
 
 const LoginRegister = ({}: LoginRegister) => {
   let navigate = useNavigate();
-  const session = useSession();
 
   const [emailRegisterData, setEmailRegisterData] = useState({
     firstName: "",
@@ -45,18 +43,7 @@ const LoginRegister = ({}: LoginRegister) => {
         },
       },
     });
-
-    const updatedSession = session;
-
-    const { error } = await supabase.from("users").insert({
-      user_id: updatedSession.session?.user.id,
-    });
-    if (error) {
-      alert(error.message);
-    } else {
-      alert("Your account has been created!");
-      navigate("/");
-    }
+    navigate("/");
   };
 
   const handleEmailLoginChange = (
