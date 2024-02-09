@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../config/supabase.config";
 import "../pages/products.css";
+import { addToBasket } from "../db/db_apis";
 
 interface ProductsTable {
   name: string;
@@ -38,8 +39,8 @@ const Products = () => {
     <div>
       <main>
         <section className="cards">
-          {products.map((product, idx) => (
-            <div key={idx} className="card">
+          {products.map((product) => (
+            <div key={product.product_id} className="card">
               <div className="card__image-container">
                 <img src={product.image_url} />
               </div>
@@ -49,7 +50,15 @@ const Products = () => {
                 </p>
                 <div className="card__info">
                   <p className="text--medium">{product.name}</p>
-                  <p className="card__price text--medium">{product.price}</p>
+                  <button
+                    className="card__price"
+                    onClick={() => {
+                      addToBasket(product.product_id);
+                    }}
+                  >
+                    Add to basket
+                  </button>
+                  <p className="card__price text--medium">€{product.price}</p>
                 </div>
               </div>
             </div>
