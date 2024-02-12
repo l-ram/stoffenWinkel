@@ -3,12 +3,14 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
 import "./main.css";
 import { SessionProvider } from "./context/SessionContext.tsx";
-import { Database } from "../src/types/db.ts";
+import { BasketProvider } from "./context/BasketContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <SessionProvider>
-      <App />
+      <BasketProvider>
+        <App />
+      </BasketProvider>
     </SessionProvider>
   </BrowserRouter>
 );

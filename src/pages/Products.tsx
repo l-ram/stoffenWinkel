@@ -33,8 +33,6 @@ const Products = () => {
     getProducts();
   }, []);
 
-  console.log("Products:", products);
-
   return (
     <div>
       <main>

@@ -15,31 +15,28 @@ interface Basket {
 }
 
 const Basket = () => {
-  const session = useSession();
   const [basket, setBasket] = useState<Basket[] | null>();
   let basketTotal: number = 0;
+  const session = useSession();
 
   basket?.forEach((x) => {
     basketTotal += x.price * x.quantity;
   });
 
   useEffect(() => {
-    console.log("useEffect ran");
     const getBasket = async (user_id: string) => {
-      console.log("async running");
       const { data, error } = await supabase
         .from("basket")
         .select("*")
         .eq("user_id", user_id)
         .returns<Database["public"]["Tables"]["basket"]["Row"][]>();
-      console.log("where is my basket?:", data);
       setBasket(data);
       if (error) {
         alert(error.message);
       }
     };
-    getBasket("1dcaa6e2-fd0b-47ac-9e72-1f753d49ef30");
-    console.log("get basket ran");
+    const currentSession = session;
+    getBasket(currentSession?.user.id as string);
   }, []);
   // session?.user.id as string
 
