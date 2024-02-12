@@ -1,6 +1,7 @@
 import { useSession } from "../../context/SessionContext";
 
 import UserSummary from "../../components/Navigation/UserSummary";
+import BasketSummary from "../../components/Navigation/BasketSummary";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../config/supabase.config";
 
@@ -67,6 +68,7 @@ const Navbar = ({}: NavBar) => {
       )}
 
       <UserSummary />
+      <BasketSummary />
     </div>
   );
 };
