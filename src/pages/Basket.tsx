@@ -2,7 +2,7 @@ import { useSession } from "../context/SessionContext";
 import { Database } from "../types/db";
 import { useEffect, useState } from "react";
 import { supabase } from "../config/supabase.config";
-
+import "../pages/basket.scss";
 interface Basket {
   category_id: string;
   date_added: string | null;
@@ -16,28 +16,179 @@ interface Basket {
 
 const Basket = () => {
   const session = useSession();
-  const [basket, setBasket] = useState<Basket | null>();
+  const [basket, setBasket] = useState<Basket[] | null>();
+  let basketTotal: number = 0;
+
+  basket?.forEach((x) => {
+    basketTotal += x.price * x.quantity;
+  });
 
   useEffect(() => {
+    console.log("useEffect ran");
     const getBasket = async (user_id: string) => {
+      console.log("async running");
       const { data, error } = await supabase
         .from("basket")
         .select("*")
         .eq("user_id", user_id)
-        .returns<Database["public"]["Tables"]["basket"]["Row"]>();
+        .returns<Database["public"]["Tables"]["basket"]["Row"][]>();
+      console.log("where is my basket?:", data);
       setBasket(data);
       if (error) {
         alert(error.message);
       }
     };
-    getBasket(session?.user.id as string);
+    getBasket("1dcaa6e2-fd0b-47ac-9e72-1f753d49ef30");
+    console.log("get basket ran");
   }, []);
+  // session?.user.id as string
 
-  console.log(basket);
+  const handleRemoveItem = async (productId: number) => {
+    const { error } = await supabase
+      .from("basket")
+      .delete()
+      .eq("product_id", productId);
+    if (error) {
+      alert(error.message);
+    } else {
+      console.log("Item removed!");
+      const { data } = await supabase
+        .from("basket")
+        .select("*")
+        .eq("user_id", session?.user.id as string)
+        .returns<Database["public"]["Tables"]["basket"]["Row"][]>();
+      console.log("where is my basket?:", data);
+      setBasket(data);
+    }
+  };
+
+  const handleIncrement = async (productId: number) => {
+    const { error } = await supabase.rpc("increment", {
+      x: 1,
+      id: productId,
+    });
+
+    if (error) {
+      alert(error.message);
+    } else {
+      const { data } = await supabase
+        .from("basket")
+        .select("*")
+        .eq("user_id", session?.user.id as string)
+        .returns<Database["public"]["Tables"]["basket"]["Row"][]>();
+      setBasket(data);
+    }
+  };
+
+  const handleDecrement = async (productId: number) => {
+    const { error } = await supabase.rpc("decrement", {
+      x: 1,
+      id: productId,
+    });
+
+    if (error) {
+      alert(error.message);
+    } else {
+      const { data } = await supabase
+        .from("basket")
+        .select("*")
+        .eq("user_id", session?.user.id as string)
+        .returns<Database["public"]["Tables"]["basket"]["Row"][]>();
+      setBasket(data);
+    }
+  };
 
   return (
-    <div>
-      <h1>Shopping basket</h1>
+    <div className="wrap cf">
+      <div className="heading cf">
+        <h1>My basket</h1>
+        <a href="#" className="continue">
+          Continue Shopping
+        </a>
+      </div>
+
+      <div className="cart">
+        <ul className="cartWrap">
+          {basket?.map((b) => (
+            <li className="items odd" key={b.product_id}>
+              <div className="infoWrap">
+                <div className="cartSection">
+                  <img src={b.image_url} alt="" className="itemImg" />
+                  <p className="itemNumber">{b.category_id}</p>
+                  <h3>{b.name}</h3>
+
+                  <p>
+                    {" "}
+                    <input
+                      type="text"
+                      className="qty"
+                      placeholder={b.quantity.toString()}
+                    />{" "}
+                    x €{b.price}
+                  </p>
+                </div>
+
+                <div className="prodTotal cartSection">
+                  <p>{`€${(b.price * b.quantity).toFixed(2)}`}</p>
+                </div>
+                <div className="cartSection removeWrap">
+                  <button
+                    className="increment"
+                    onClick={() => handleIncrement(b.product_id)}
+                  >
+                    <h1>+</h1>
+                  </button>
+                  {b.quantity >= 2 ? (
+                    <button
+                      className="increment"
+                      onClick={() => handleDecrement(b.product_id)}
+                    >
+                      <h1>-</h1>
+                    </button>
+                  ) : null}
+                  <a
+                    href="#"
+                    className="remove"
+                    onClick={() => handleRemoveItem(b.product_id)}
+                  >
+                    x
+                  </a>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="promoCode">
+        <label form="promo">Have A Promo Code?</label>
+        <input type="text" name="promo" placeholder="Enter Code" />
+        <a href="#" className="btn"></a>
+      </div>
+
+      <div className="subtotal cf">
+        <ul>
+          <li className="totalRow">
+            <span className="label">Subtotal</span>
+            <span className="value">€{basketTotal.toFixed(2)}</span>
+          </li>
+
+          <li className="totalRow">
+            <span className="label">Shipping</span>
+            <span className="value">€5.00</span>
+          </li>
+
+          <li className="totalRow final">
+            <span className="label">Total</span>
+            <span className="value">€{(basketTotal + 5).toFixed(2)}</span>
+          </li>
+          <li className="totalRow">
+            <a href="#" className="btn continue">
+              Checkout
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };
