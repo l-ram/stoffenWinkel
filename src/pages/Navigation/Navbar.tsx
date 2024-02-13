@@ -1,5 +1,4 @@
 import { useSession } from "../../context/SessionContext";
-
 import UserSummary from "../../components/Navigation/UserSummary";
 import BasketSummary from "../../components/Navigation/BasketSummary";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,7 +8,6 @@ interface NavBar {}
 
 const Navbar = ({}: NavBar) => {
   const session = useSession();
-
   let navigate = useNavigate();
 
   const handleEmailLogout = async () => {

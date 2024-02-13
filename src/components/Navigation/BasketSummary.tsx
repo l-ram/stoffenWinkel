@@ -1,31 +1,17 @@
 import { ShoppingCart } from "@mui/icons-material";
 import { Badge } from "@mui/material";
-import { useEffect, useState, useCallback } from "react";
-import { useSession } from "../../context/SessionContext";
+import { useEffect, useState } from "react";
 import { supabase } from "../../config/supabase.config";
-import { Database } from "../../types/db";
+import { useBasket } from "../../context/BasketContext";
 
 const BasketSummary = () => {
-  const session = useSession();
+  const basket = useBasket();
   const [cartCount, setCartCount] = useState(0);
 
-  useCallback(() => {
-    const getCartCount = async (user_id: string) => {
-      const { data, error } = await supabase
-        .from("basket")
-        .select("*")
-        .eq("user_id", user_id)
-        .returns<Database["public"]["Tables"]["basket"]["Row"][]>();
-      if (error) {
-        alert(error.message);
-      } else {
-        setCartCount(data?.length as number);
-      }
-    };
-    getCartCount(session?.user.id as string);
-  }, []);
-
-  console.log(cartCount);
+  useEffect(() => {
+    const newCartCount = basket ? basket.length : 0;
+    setCartCount(newCartCount);
+  }, [basket]);
 
   return (
     <div>

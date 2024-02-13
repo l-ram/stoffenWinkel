@@ -1,4 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../config/supabase.config";
+import { useSession } from "../context/SessionContext";
+import { Database } from "../types/db";
 
 export const addToBasket = async (product_id: number) => {
   const { data: existingProduct, error } = await supabase
@@ -52,4 +55,29 @@ export const addToBasket = async (product_id: number) => {
       console.log("Basket:", data);
     }
   }
+};
+
+export const useCartItems = () => {
+  const session = useSession();
+  return useQuery({
+    queryKey: ["basket"],
+    queryFn: async ({ signal }) => {
+      let query = supabase
+        .from("basket")
+        .select("*")
+        .eq("user_id", session?.user.id as string)
+        .returns<Database["public"]["Tables"]["basket"]["Row"][]>();
+
+      if (signal) {
+        query = query.abortSignal(signal);
+      }
+
+      const { data, error } = await query.throwOnError();
+      if (error) {
+        alert(error.message);
+      }
+      return data as unknown as Database["public"]["Tables"]["basket"]["Row"][];
+    },
+    enabled: Boolean(session),
+  });
 };

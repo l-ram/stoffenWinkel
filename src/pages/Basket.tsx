@@ -3,6 +3,7 @@ import { Database } from "../types/db";
 import { useEffect, useState } from "react";
 import { supabase } from "../config/supabase.config";
 import "../pages/basket.scss";
+import { useCartItems } from "../db/db_apis";
 interface Basket {
   category_id: string;
   date_added: string | null;
@@ -15,30 +16,18 @@ interface Basket {
 }
 
 const Basket = () => {
+  const session = useSession();
+  const { data: basketItems } = useCartItems();
   const [basket, setBasket] = useState<Basket[] | null>();
   let basketTotal: number = 0;
-  const session = useSession();
+
+  useEffect(() => {
+    setBasket(basketItems);
+  }, []);
 
   basket?.forEach((x) => {
     basketTotal += x.price * x.quantity;
   });
-
-  useEffect(() => {
-    const getBasket = async (user_id: string) => {
-      const { data, error } = await supabase
-        .from("basket")
-        .select("*")
-        .eq("user_id", user_id)
-        .returns<Database["public"]["Tables"]["basket"]["Row"][]>();
-      setBasket(data);
-      if (error) {
-        alert(error.message);
-      }
-    };
-    const currentSession = session;
-    getBasket(currentSession?.user.id as string);
-  }, []);
-  // session?.user.id as string
 
   const handleRemoveItem = async (productId: number) => {
     const { error } = await supabase
