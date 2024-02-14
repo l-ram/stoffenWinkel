@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../config/supabase.config";
 import "../pages/basket.scss";
 import { useCartItems } from "../db/db_apis";
+import { useNavigate } from "react-router-dom";
 interface Basket {
   category_id: string;
   date_added: string | null;
@@ -20,6 +21,7 @@ const Basket = () => {
   const { data: basketItems } = useCartItems();
   const [basket, setBasket] = useState<Basket[] | null>();
   let basketTotal: number = 0;
+  const navigate = useNavigate();
 
   useEffect(() => {
     setBasket(basketItems);
@@ -82,6 +84,10 @@ const Basket = () => {
         .returns<Database["public"]["Tables"]["basket"]["Row"][]>();
       setBasket(data);
     }
+  };
+
+  const handleGoToCheckout = () => {
+    navigate("/checkout");
   };
 
   return (
@@ -168,11 +174,14 @@ const Basket = () => {
             <span className="label">Total</span>
             <span className="value">€{(basketTotal + 5).toFixed(2)}</span>
           </li>
-          <li className="totalRow">
-            <a href="#" className="btn continue">
-              Checkout
-            </a>
-          </li>
+
+          <button
+            disabled={(basket?.length as number) > 1 ? false : true}
+            className="btn"
+            onClick={handleGoToCheckout}
+          >
+            Checkout
+          </button>
         </ul>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "../config/supabase.config";
 import { useSession } from "../context/SessionContext";
 import { Database } from "../types/db";
@@ -80,4 +80,8 @@ export const useCartItems = () => {
     },
     enabled: Boolean(session),
   });
+};
+
+export const createOrder = () => {
+  const session = useSession();
 };

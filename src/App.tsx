@@ -8,6 +8,7 @@ import Basket from "./pages/Basket";
 import Orders from "./pages/Orders";
 import Account from "./pages/Account";
 import Profile from "./pages/Profile";
+import Checkout from "./pages/Checkout";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
             <Route index element={<Profile />} />
             <Route path="/account/orders" element={<Orders />} />
           </Route>
+          <Route path="/checkout" element={<Checkout />} />
         </Route>
       </Routes>
     </>
