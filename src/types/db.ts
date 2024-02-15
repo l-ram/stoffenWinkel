@@ -12,7 +12,7 @@ export type Database = {
       basket: {
         Row: {
           category_id: string;
-          date_added: string | null;
+          date: string | null;
           image_url: string;
           name: string;
           price: number;
@@ -22,7 +22,7 @@ export type Database = {
         };
         Insert: {
           category_id: string;
-          date_added?: string | null;
+          date?: string | null;
           image_url: string;
           name: string;
           price: number;
@@ -32,7 +32,7 @@ export type Database = {
         };
         Update: {
           category_id?: string;
-          date_added?: string | null;
+          date?: string | null;
           image_url?: string;
           name?: string;
           price?: number;
@@ -74,20 +74,26 @@ export type Database = {
       };
       order_line: {
         Row: {
+          cost: number;
           order_id: number;
           order_line_id: number;
+          price: number;
           product_id: number;
           quantity: number;
         };
         Insert: {
+          cost: number;
           order_id: number;
           order_line_id?: number;
+          price: number;
           product_id: number;
           quantity: number;
         };
         Update: {
+          cost?: number;
           order_id?: number;
           order_line_id?: number;
+          price?: number;
           product_id?: number;
           quantity?: number;
         };
@@ -98,13 +104,6 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "orders";
             referencedColumns: ["order_id"];
-          },
-          {
-            foreignKeyName: "order_line_product_id_fkey";
-            columns: ["product_id"];
-            isOneToOne: false;
-            referencedRelation: "products";
-            referencedColumns: ["product_id"];
           }
         ];
       };
@@ -118,15 +117,13 @@ export type Database = {
           user_id: string;
         };
         Insert: {
-          order_date: string;
-          order_id?: number;
           order_total: number;
           payment_type: string;
           shipping_address: string;
-          user_id?: string;
+          user_id: string;
         };
         Update: {
-          order_date?: string;
+          order_date?: string | null;
           order_id?: number;
           order_total?: number;
           payment_type?: string;
@@ -277,7 +274,27 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      decrement: {
+        Args: {
+          x: number;
+          id: number;
+        };
+        Returns: undefined;
+      };
+      increment: {
+        Args: {
+          x: number;
+          id: number;
+        };
+        Returns: undefined;
+      };
+      increment1: {
+        Args: {
+          x: number;
+          product_id: number;
+        };
+        Returns: undefined;
+      };
     };
     Enums: {
       [_ in never]: never;

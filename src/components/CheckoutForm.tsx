@@ -1,14 +1,50 @@
 import { useCartItems } from "../db/db_apis";
-import "../pages/checkoutform.css";
+import "../components/checkoutform.css";
+import { FormEvent, useState } from "react";
+import { CheckoutData } from "../types/types";
+import { createOrder } from "../db/db_apis";
+import { useMutation } from "@tanstack/react-query";
+import { useQueryClient } from "react-query";
 
 const CheckoutForm = () => {
+  const queryClient = useQueryClient();
   const { data: basketItems } = useCartItems();
-
+  const [checkoutData, setCheckoutData] = useState<CheckoutData>({
+    total: 0,
+    paymentType: "Card",
+  });
   let total: number = 0;
 
   basketItems?.forEach((t) => {
     total += t.price * t.quantity;
   });
+
+  const mutation = useMutation({
+    mutationFn: createOrder,
+    onMutate: () => {},
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["basket"],
+      });
+    },
+  });
+
+  const handleCheckoutFormSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    mutation.mutate(checkoutData);
+  };
+
+  const handleCheckoutChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setCheckoutData((prevCheckoutData) => {
+      return {
+        ...prevCheckoutData,
+        total: total,
+        [event.target.name]: event.target.value,
+      };
+    });
+  };
 
   return (
     <div className="checkout_form">
@@ -41,32 +77,60 @@ const CheckoutForm = () => {
           <h3 className="heading-3">Credit card checkout</h3>
           <span>Total: €{total.toFixed(2)}</span>
           <div>
-            <form action="">
-              <input
-                className="input"
-                defaultValue="Cardholders name"
-                name="Cardholders name"
-                type="text"
-              />
-              <input
-                className="input input-field"
-                defaultValue="Card number"
-                name="number"
-                type="text"
-              />
-              <input
-                className="input input-field"
-                defaultValue="CRC code"
-                name="code"
-                type="text"
-              />
-              <input
-                className="input input-field"
-                defaultValue="Expiry date"
-                name="expiry"
-                type="text"
-              />
-              <button className="checkout-btn" type="button">
+            <form onSubmit={handleCheckoutFormSubmit}>
+              <label>
+                {" "}
+                Cardholders name
+                <input
+                  className="input"
+                  name="cardholdersName"
+                  type="text"
+                  required={true}
+                />
+              </label>
+              <label>
+                {" "}
+                Payment type
+                <select
+                  name="paymentType"
+                  required={true}
+                  onChange={handleCheckoutChange}
+                >
+                  <option>Card</option>
+                  <option>Paypal</option>
+                </select>
+              </label>
+              <label>
+                {" "}
+                Card number
+                <input
+                  className="input input-field"
+                  name="cardNumber"
+                  type="number"
+                  required={true}
+                />
+              </label>
+              <label>
+                {" "}
+                Code
+                <input
+                  className="input input-field"
+                  name="code"
+                  type="number"
+                  required={true}
+                />
+              </label>
+              <label>
+                {" "}
+                Expiry date
+                <input
+                  className="input input-field"
+                  name="expiry"
+                  type="date"
+                  required={true}
+                />
+              </label>
+              <button className="checkout-btn" type="submit">
                 {"Place order"}
               </button>
             </form>

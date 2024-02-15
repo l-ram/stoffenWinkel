@@ -11,8 +11,6 @@ const BasketContext = createContext<
 
 type BasketProviderProps = { children: ReactNode };
 
-Database["public"]["Tables"]["orders"]["rows"][]
-
 export const BasketProvider = (props: BasketProviderProps) => {
   const session = useSession();
   const queryClient = useQueryClient();
