@@ -4,8 +4,6 @@ import { useSession } from "../context/SessionContext";
 import { Database } from "../types/db";
 import { CheckoutData } from "../types/types";
 
-const queryClient = useQueryClient();
-
 export const addToBasket = async (product_id: number) => {
   const { data: existingProduct, error } = await supabase
     .from("basket")
@@ -87,6 +85,7 @@ export const useCartItems = () => {
 
 export const createOrder = async (checkout: CheckoutData) => {
   const session = useSession();
+  const queryClient = useQueryClient();
   session?.user.user_metadata;
 
   const { data: user, error } = await supabase

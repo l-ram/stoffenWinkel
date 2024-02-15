@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import { CheckoutData } from "../types/types";
 import { createOrder } from "../db/db_apis";
 import { useMutation } from "@tanstack/react-query";
-import { useQueryClient } from "react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 const CheckoutForm = () => {
   const queryClient = useQueryClient();
@@ -21,15 +21,20 @@ const CheckoutForm = () => {
 
   const mutation = useMutation({
     mutationFn: createOrder,
-    onMutate: () => {},
-    onSuccess: (data) => {
+    onMutate: () => {
+      console.log("does mutate run?");
+    },
+    onSuccess: () => {
+      console.log("does mutate run?");
       queryClient.invalidateQueries({
         queryKey: ["basket"],
       });
+      console.log("mutate ran:");
     },
   });
 
   const handleCheckoutFormSubmit = (event: FormEvent) => {
+    console.log("button clicked");
     event.preventDefault();
     mutation.mutate(checkoutData);
   };
