@@ -84,9 +84,13 @@ export const useCartItems = () => {
 };
 
 export const createOrder = async (checkout: CheckoutData) => {
+  console.log(checkout);
+  console.log("does create order func run?");
   const session = useSession();
   const queryClient = useQueryClient();
-  session?.user.user_metadata;
+
+  console.log(session);
+  console.log(queryClient);
 
   const { data: user, error } = await supabase
     .from("users")
@@ -95,6 +99,8 @@ export const createOrder = async (checkout: CheckoutData) => {
   if (error) {
     return alert(error.message);
   }
+
+  console.log(user);
 
   const { data: basketItems, error: basketError } = await supabase
     .from("basket")
@@ -133,6 +139,7 @@ export const createOrder = async (checkout: CheckoutData) => {
     .eq("user_id", session?.user.id as string);
 
   queryClient.invalidateQueries({ queryKey: ["basket"] });
+
   return newOrder;
 };
 

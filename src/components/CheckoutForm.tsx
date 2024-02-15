@@ -9,15 +9,19 @@ import { useQueryClient } from "@tanstack/react-query";
 const CheckoutForm = () => {
   const queryClient = useQueryClient();
   const { data: basketItems } = useCartItems();
+
   const [checkoutData, setCheckoutData] = useState<CheckoutData>({
     total: 0,
     paymentType: "Card",
   });
-  let total: number = 0;
 
-  basketItems?.forEach((t) => {
-    total += t.price * t.quantity;
-  });
+  console.log(basketItems);
+
+  const totalPrice = basketItems?.reduce((total, item) => {
+    return total + item.price * item.quantity;
+  }, 0);
+
+  console.log(totalPrice);
 
   const mutation = useMutation({
     mutationFn: createOrder,
@@ -25,7 +29,7 @@ const CheckoutForm = () => {
       console.log("does mutate run?");
     },
     onSuccess: () => {
-      console.log("does mutate run?");
+      console.log("does success run?");
       queryClient.invalidateQueries({
         queryKey: ["basket"],
       });
@@ -45,7 +49,7 @@ const CheckoutForm = () => {
     setCheckoutData((prevCheckoutData) => {
       return {
         ...prevCheckoutData,
-        total: total,
+        total: totalPrice as number,
         [event.target.name]: event.target.value,
       };
     });
@@ -80,7 +84,7 @@ const CheckoutForm = () => {
       <div className="checkout_container">
         <div className="checkout-container">
           <h3 className="heading-3">Credit card checkout</h3>
-          <span>Total: €{total.toFixed(2)}</span>
+          <span>Total: €{(totalPrice as number).toFixed(2)}</span>
           <div>
             <form onSubmit={handleCheckoutFormSubmit}>
               <label>
