@@ -83,43 +83,57 @@ export const useCartItems = () => {
   });
 };
 
-export const createOrder = async (checkout: CheckoutData) => {
-  console.log(checkout);
-  console.log("does create order func run?");
-  const session = useSession();
-  const queryClient = useQueryClient();
+export const useGetOrders = async (userId: string) => {
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ["orders"],
+    queryFn: async () => {
+      const orderData = await supabase
+        .from("orders")
+        .select("*")
+        .eq("user_id", userId)
+        .returns<Database["public"]["Tables"]["orders"]["Row"][]>();
+    },
+  });
 
-  console.log(session);
-  console.log(queryClient);
+  console.log(data, isError, isLoading);
+};
+
+export const createOrder = async (checkout: CheckoutData) => {
+  console.log("does create order func run?");
 
   const { data: user, error } = await supabase
     .from("users")
     .select("*")
-    .eq("user_id", session?.user.id as string);
+    .eq("user_id", checkout.user);
   if (error) {
     return alert(error.message);
   }
 
-  console.log(user);
+  console.log("user:", user);
 
   const { data: basketItems, error: basketError } = await supabase
     .from("basket")
     .select("*")
-    .eq("user_id", session?.user.id as string);
+    .eq("user_id", checkout.user);
   if (basketError) throw new Error(basketError.message);
+
+  console.log("basket items:", basketItems);
 
   const { data: newOrder, error: orderError } = await supabase
     .from("orders")
     .upsert([
       {
-        user_id: session?.user.id as string,
+        user_id: checkout.user,
         shipping_address: user[0].shipping_address as string,
         payment_type: checkout.paymentType as string,
         order_total: checkout.total as number,
       },
     ])
+    .select("*")
     .returns<Database["public"]["Tables"]["orders"]["Row"][]>();
+  console.log("New order:", newOrder);
   if (orderError) {
+    alert(orderError.message);
     throw new Error(orderError.message);
   }
 
@@ -131,34 +145,11 @@ export const createOrder = async (checkout: CheckoutData) => {
     price: item.price,
   }));
 
+  console.log("Order lines table! :", orderLines);
+
   await supabase.from("order_line").insert(orderLines);
 
-  await supabase
-    .from("basket")
-    .delete()
-    .eq("user_id", session?.user.id as string);
-
-  queryClient.invalidateQueries({ queryKey: ["basket"] });
+  await supabase.from("basket").delete().eq("user_id", checkout.user);
 
   return newOrder;
 };
-
-// const getCurrentBasket = async () => {
-//   const {
-//     data: currentBasket,
-//     isLoading,
-//     error,
-//   } = await useQuery({
-//     queryKey: ["basket"],
-//     queryFn: async () => {
-//       const session = useSession();
-//       const { data: basketItems, error: basketError } = await supabase
-//         .from("basket")
-//         .select("*")
-//         .eq("user_id", session?.user.id as string)
-//         .returns<Database["public"]["Tables"]["basket"]["Row"][]>();
-//     },
-//   });
-
-//   return { currentBasket, isLoading, error };
-// };

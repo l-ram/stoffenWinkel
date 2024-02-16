@@ -9,6 +9,7 @@ import Orders from "./pages/Orders";
 import Account from "./pages/Account";
 import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
+import OrderConfirmation from "./pages/OrderConfirmation";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
             <Route path="/account/orders" element={<Orders />} />
           </Route>
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/orderConfirmation" element={<OrderConfirmation />} />
         </Route>
       </Routes>
     </>

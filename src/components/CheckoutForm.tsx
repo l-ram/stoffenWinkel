@@ -1,27 +1,39 @@
 import { useCartItems } from "../db/db_apis";
 import "../components/checkoutform.css";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { CheckoutData } from "../types/types";
 import { createOrder } from "../db/db_apis";
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSession } from "../context/SessionContext";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutForm = () => {
+  const session = useSession();
+  const userId: string = session?.user.id as string;
   const queryClient = useQueryClient();
   const { data: basketItems } = useCartItems();
+  const navigate = useNavigate();
 
   const [checkoutData, setCheckoutData] = useState<CheckoutData>({
     total: 0,
     paymentType: "Card",
+    user: "",
   });
-
-  console.log(basketItems);
 
   const totalPrice = basketItems?.reduce((total, item) => {
     return total + item.price * item.quantity;
   }, 0);
 
-  console.log(totalPrice);
+  useEffect(() => {
+    setCheckoutData({
+      total: totalPrice as number,
+      paymentType: "Card",
+      user: userId,
+    });
+  }, [session]);
+
+  console.log(checkoutData.total);
 
   const mutation = useMutation({
     mutationFn: createOrder,
@@ -41,15 +53,20 @@ const CheckoutForm = () => {
     console.log("button clicked");
     event.preventDefault();
     mutation.mutate(checkoutData);
+    navigate("/orderConfirmation");
   };
 
   const handleCheckoutChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     setCheckoutData((prevCheckoutData) => {
+      const updatedTotal = basketItems?.reduce((total, item) => {
+        return total + item.price * item.quantity;
+      }, 0);
+
       return {
         ...prevCheckoutData,
-        total: totalPrice as number,
+        total: updatedTotal || 0,
         [event.target.name]: event.target.value,
       };
     });
@@ -72,7 +89,7 @@ const CheckoutForm = () => {
                 </div>
 
                 <div className="prodTotal cartSection">
-                  <p>{`€${(b.price * b.quantity).toFixed(2)}`}</p>
+                  <p>€ {(b.price * b.quantity).toFixed(2)}</p>
                 </div>
                 <div className="cartSection removeWrap"></div>
               </div>
@@ -84,7 +101,7 @@ const CheckoutForm = () => {
       <div className="checkout_container">
         <div className="checkout-container">
           <h3 className="heading-3">Credit card checkout</h3>
-          <span>Total: €{(totalPrice as number).toFixed(2)}</span>
+          <span>Total: €{totalPrice as number}</span>
           <div>
             <form onSubmit={handleCheckoutFormSubmit}>
               <label>
