@@ -1,123 +1,31 @@
-import { FormEvent, useEffect, useState } from "react";
 import { useSession } from "../context/SessionContext";
-import { supabase } from "../config/supabase.config";
-import { useNavigate } from "react-router-dom";
+import { useGetOrders } from "../db/db_apis";
+import { CircularProgress } from "@mui/material/";
 
-interface OrderTable {
-  order_id: number;
-  user_id: string;
-  product: string;
-  quantity: number;
-  shipping_address: string;
-}
-
-const TestOrder = () => {
+const Orders = () => {
   const session = useSession();
-
-  const [orderData, setOrderData] = useState<{
-    product: string;
-    shipping_address: string;
-    quantity: number;
-  }>({
-    product: "",
-    shipping_address: "",
-    quantity: 0,
-  });
-
-  console.log(orderData);
-  const navigate = useNavigate();
-
-  const handleOrderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setOrderData((prevOrderData) => {
-      return {
-        ...prevOrderData,
-        [event.target.name]: event.target.value,
-      };
-    });
-  };
-
-  const handleOrderSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-
-    const { data, error } = await supabase
-      .from("testOrder")
-      .insert({
-        // user_id: session?.user.id,
-        // shipping_address: orderData.shipping_address,
-        // payment_state: "accepted",
-        shipping_address: orderData.shipping_address,
-        product: orderData.product,
-        quantity: orderData.quantity,
-        // order_date: `(to_timestamp(${Date.now()} /1000 ))`,
-      })
-      .select();
-    console.log(data);
-    if (error) {
-      alert(error.message);
-      navigate("/orders");
-    }
-  };
-
-  const [orderHistory, setOrderHistory] = useState<OrderTable[]>([]);
-
-  useEffect(() => {
-    const getOrderHistory = async () => {
-      const { data, error } = await supabase
-        .from("testOrder")
-        .select("*")
-        .returns<OrderTable[]>();
-      console.log(data);
-      if (data === null || error) {
-        alert(error.message);
-      } else {
-        setOrderHistory(data);
-      }
-    };
-    getOrderHistory();
-  }, []);
-
-  console.log("Order history:", orderHistory);
+  const { data, error, isLoading, isError } = useGetOrders(
+    session?.user.id as string
+  );
 
   return (
     <div>
       {session && (
-        <form onSubmit={handleOrderSubmit}>
-          <input
-            placeholder="Product"
-            type="text"
-            name="product"
-            onChange={handleOrderChange}
-          />
-
-          <input
-            placeholder="quantity"
-            type="number"
-            name="quantity"
-            onChange={handleOrderChange}
-          />
-
-          <input
-            placeholder="address"
-            type="text"
-            name="shipping_address"
-            onChange={handleOrderChange}
-          />
-
-          <button>Order!</button>
-
-          <br />
-
+        <div>
           <h1>Order History</h1>
 
-          {orderHistory.map((x) => (
+          {isError && <p>{error.message}</p>}
+          {isLoading && <CircularProgress />}
+
+          {data?.data?.map((x) => (
             <div style={{ backgroundColor: "lightcyan" }}>
-              <h5>Order Id: {x.order_id}</h5>
-              <h2 style={{ color: "purple" }}>{x.product}</h2>
-              <h3>Amount: {x.quantity}</h3>
-              <h4>Address: {x.shipping_address}</h4>
+              <h4>Order Id: {x.order_id}</h4>
+              <h2 style={{ color: "purple" }}>{x.order_date}</h2>
+              <h3>Amount: {x.shipping_address}</h3>
+              <h4>Address: {x.order_total}</h4>
             </div>
           ))}
-        </form>
+        </div>
       )}
 
       {!session && <h1>Please login to place an order</h1>}
@@ -125,4 +33,4 @@ const TestOrder = () => {
   );
 };
 
-export default TestOrder;
+export default Orders;

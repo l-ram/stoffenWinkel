@@ -1,46 +1,31 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../config/supabase.config";
 import "../pages/products.css";
 import { addToBasket } from "../db/db_apis";
-
-interface ProductsTable {
-  name: string;
-  product_id: number;
-  category_id: string;
-  price: number;
-  short_description: string;
-  long_description: string;
-  image_url: string;
-}
+import { useGetProducts } from "../db/db_apis";
+import { CircularProgress } from "@mui/material/";
+import { useState } from "react";
 
 const Products = () => {
-  // const [loading, setLoading] = useState<boolean>(true);
+  const [page, setPage] = useState(1);
 
-  const [products, setproducts] = useState<ProductsTable[]>([]);
-
-  useEffect(() => {
-    const getProducts = async () => {
-      const { data, error } = await supabase
-        .from("catalog")
-        .select("*")
-        .returns<ProductsTable[]>();
-      if (data === null || error) {
-        alert(error.message);
-      } else {
-        setproducts(data);
-      }
-    };
-    getProducts();
-  }, []);
+  const { data: products, isLoading, isError, error } = useGetProducts();
 
   return (
     <div>
       <main>
+        {isLoading && <CircularProgress />}
+        {isError && <p>{error.message}</p>}
+
+        <div className="pages">
+          <button>Previous page</button>
+          <span> {page} </span>
+          <button>Next page</button>
+        </div>
+
         <section className="cards">
-          {products.map((product) => (
+          {products?.data?.map((product) => (
             <div key={product.product_id} className="card">
               <div className="card__image-container">
-                <img src={product.image_url} />
+                <img src={product.image_url as string} />
               </div>
               <div className="card__content">
                 <p className="card__title text--medium">

@@ -1,6 +1,5 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../config/supabase.config";
-import { useSession } from "../context/SessionContext";
 import { Database } from "../types/db";
 import { CheckoutData } from "../types/types";
 
@@ -58,15 +57,14 @@ export const addToBasket = async (product_id: number) => {
   }
 };
 
-export const useCartItems = () => {
-  const session = useSession();
+export const useCartItems = (userId: string) => {
   return useQuery({
     queryKey: ["basket"],
     queryFn: async ({ signal }) => {
       let query = supabase
         .from("basket")
         .select("*")
-        .eq("user_id", session?.user.id as string)
+        .eq("user_id", userId)
         .returns<Database["public"]["Tables"]["basket"]["Row"][]>();
 
       if (signal) {
@@ -79,12 +77,12 @@ export const useCartItems = () => {
       }
       return data as unknown as Database["public"]["Tables"]["basket"]["Row"][];
     },
-    enabled: Boolean(session),
+    enabled: Boolean(userId),
   });
 };
 
-export const useGetOrders = async (userId: string) => {
-  const { data, isError, isLoading } = useQuery({
+export const useGetOrders = (userId: string) => {
+  return useQuery({
     queryKey: ["orders"],
     queryFn: async () => {
       const orderData = await supabase
@@ -92,10 +90,9 @@ export const useGetOrders = async (userId: string) => {
         .select("*")
         .eq("user_id", userId)
         .returns<Database["public"]["Tables"]["orders"]["Row"][]>();
+      return orderData;
     },
   });
-
-  console.log(data, isError, isLoading);
 };
 
 export const createOrder = async (checkout: CheckoutData) => {
@@ -152,4 +149,18 @@ export const createOrder = async (checkout: CheckoutData) => {
   await supabase.from("basket").delete().eq("user_id", checkout.user);
 
   return newOrder;
+};
+
+export const useGetProducts = (page: number) => {
+  return useQuery({
+    queryKey: ["products", { page }],
+    queryFn: async (page) => {
+      const products = await supabase
+        .from("catalog")
+        .select("*")
+        .limit(25)
+        .returns<Database["public"]["Tables"]["catalog"]["Row"][]>();
+      return products;
+    },
+  });
 };

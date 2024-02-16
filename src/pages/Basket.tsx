@@ -5,21 +5,19 @@ import { supabase } from "../config/supabase.config";
 import "../pages/basket.scss";
 import { useCartItems } from "../db/db_apis";
 import { useNavigate } from "react-router-dom";
-interface Basket {
-  category_id: string;
-  date_added: string | null;
-  image_url: string;
-  name: string;
-  price: number;
-  product_id: number;
-  quantity: number;
-  user_id: string;
-}
 
 const Basket = () => {
   const session = useSession();
-  const { data: basketItems } = useCartItems();
-  const [basket, setBasket] = useState<Basket[] | null>();
+  const {
+    data: basketItems,
+    isError,
+    error,
+    isLoading,
+  } = useCartItems(session?.user.id as string);
+
+  const [basket, setBasket] = useState<
+    Database["public"]["Tables"]["basket"]["Row"][] | null
+  >();
   let basketTotal: number = 0;
   const navigate = useNavigate();
 
@@ -92,6 +90,7 @@ const Basket = () => {
 
   return (
     <div className="wrap cf">
+      {basketItems?.length < 1 && <p>Basket is empty</p>}
       <div className="heading cf">
         <h1>My basket</h1>
         <a href="#" className="continue">
