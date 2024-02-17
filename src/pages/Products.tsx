@@ -3,11 +3,28 @@ import { addToBasket } from "../db/db_apis";
 import { useGetProducts } from "../db/db_apis";
 import { CircularProgress } from "@mui/material/";
 import { useState } from "react";
+import { Database } from "../types/db";
 
 const Products = () => {
   const [page, setPage] = useState(1);
 
-  const { data: products, isLoading, isError, error } = useGetProducts();
+  const [productState, setProductState] = useState<
+    Database["public"]["Tables"]["products"]["Row"][]
+  >([]);
+
+  const { data: products, isLoading, isError, error } = useGetProducts(page);
+  setProductState(products);
+
+  const [isFiltered, setFilter] = useState(false);
+  const [isSorted, setSorting] = useState(false);
+
+  const handleSelectedCategory = (category: string) => {
+    productState.filter((cat) => {
+      cat.category_id === category;
+    });
+  };
+
+  const handleSortProducts = () => {};
 
   return (
     <div>
@@ -19,6 +36,16 @@ const Products = () => {
           <button>Previous page</button>
           <span> {page} </span>
           <button>Next page</button>
+        </div>
+
+        <div className="category">
+          <ul>
+            <li>
+              <p>Fabric</p>
+            </li>
+            <li></li>
+            <li></li>
+          </ul>
         </div>
 
         <section className="cards">
