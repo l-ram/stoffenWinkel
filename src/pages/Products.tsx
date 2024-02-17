@@ -4,12 +4,13 @@ import { useGetProducts } from "../db/db_apis";
 import { CircularProgress } from "@mui/material/";
 import { useState } from "react";
 import { Database } from "../types/db";
+import { CategorySelector } from "../components/CategorySelector";
 
 const Products = () => {
   const [page, setPage] = useState(1);
 
   const [productState, setProductState] = useState<
-    Database["public"]["Tables"]["products"]["Row"][]
+    Database["public"]["Tables"]["catalog"]["Row"][]
   >([]);
 
   const { data: products, isLoading, isError, error } = useGetProducts(page);
@@ -17,14 +18,16 @@ const Products = () => {
 
   const [isFiltered, setFilter] = useState(false);
   const [isSorted, setSorting] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>();
+  const categories = ["Fabric", "Wool", "Tools"];
 
-  const handleSelectedCategory = (category: string) => {
-    productState.filter((cat) => {
-      cat.category_id === category;
-    });
+  const handleSelectedCategory = (e: HTMLParagraphElement) => {
+    e.preventDefault();
+    setProductState(
+      productState.filter((cat) => cat.category_id === e.event.target)
+    );
+    setSelectedCategory(e.event.target as string);
   };
-
-  const handleSortProducts = () => {};
 
   return (
     <div>
@@ -38,15 +41,11 @@ const Products = () => {
           <button>Next page</button>
         </div>
 
-        <div className="category">
-          <ul>
-            <li>
-              <p>Fabric</p>
-            </li>
-            <li></li>
-            <li></li>
-          </ul>
-        </div>
+        <CategorySelector
+          handleSelectedCategory={handleSelectedCategory}
+          isfiltered={isFiltered}
+          selected={selectedCategory}
+        />
 
         <section className="cards">
           {products?.data?.map((product) => (
