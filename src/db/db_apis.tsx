@@ -151,15 +151,16 @@ export const createOrder = async (checkout: CheckoutData) => {
   return newOrder;
 };
 
-export const useGetProducts = (page: number) => {
+export const useGetProducts = (page: number, itemsPerPage: number) => {
   return useQuery({
     queryKey: ["products", { page }],
-    queryFn: async (page) => {
+    queryFn: async () => {
       const products = await supabase
         .from("catalog")
-        .select("*")
-        .limit(25)
+        .select("*", { count: "exact" })
+        .range((page - 1) * itemsPerPage, page * itemsPerPage - 1)
         .returns<Database["public"]["Tables"]["catalog"]["Row"][]>();
+
       return products;
     },
   });

@@ -11,14 +11,11 @@ const CategorySelector = ({
   selected,
   handleSelectedCategory,
 }: CategorySelector) => {
-  if (selected) {
-  }
-
   return (
     <div className="categorySelector">
       <ul>
         {categories.map((x) => (
-          <li>
+          <li key={x}>
             <p onClick={handleSelectedCategory}>{x}</p>
           </li>
         ))}
