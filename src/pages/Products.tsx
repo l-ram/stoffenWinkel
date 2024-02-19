@@ -5,57 +5,48 @@ import { CircularProgress } from "@mui/material/";
 import { useEffect, useState } from "react";
 import { Database } from "../types/db";
 import CategorySelector from "../components/CategorySelector";
+import SortingSelector from "../components/SortingSelector";
 
 const Products = () => {
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(25);
+  const [isFiltered, setFilter] = useState<boolean>(false);
+  const [isSorted, setSorting] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const categories = ["All", "Fabric", "Wool", "Needles"];
 
-  const [productState, setProductState] = useState<
-    Database["public"]["Tables"]["catalog"]["Row"][] | null
-  >();
-
-  console.log("useState:", productState);
-
+  // Products hook
   const {
     data: products,
     isLoading,
     isError,
     error,
-  } = useGetProducts(page, itemsPerPage);
-
-products?.
+  } = useGetProducts(page, itemsPerPage, selectedCategory);
 
   const totalPages = Math.ceil((products?.count as number) / itemsPerPage);
+  console.log("total pages:", totalPages);
 
+  // Functions
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
 
-  console.log(totalPages);
+  const handleSorting = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const sort = e.currentTarget.value as string;
+    setSorting(sort);
+  };
 
-  useEffect(() => {
-    setProductState(products?.data);
-  }, [products]);
-
-  const [isFiltered, setFilter] = useState<boolean>(false);
-  const [isSorted, setSorting] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const categories = ["All", "Fabric", "Wool", "Needles"];
+  console.log(isSorted);
 
   const handleSelectedCategory = (
     e: React.MouseEvent<HTMLParagraphElement>
   ) => {
     e.preventDefault();
 
-    if (e.currentTarget.textContent === "All") {
-      setProductState(products?.data);
-      return;
-    } else {
-      const filteredProducts = products?.data?.filter(
-        (cat) => cat.category_id === e.currentTarget.textContent
-      );
-      console.log(filteredProducts);
-      setProductState(filteredProducts);
+    const cat = e.currentTarget.textContent;
+
+    if (cat) {
       setSelectedCategory(e.currentTarget.textContent as string);
     }
   };
@@ -73,7 +64,7 @@ products?.
           >
             Previous page
           </button>
-          <span> {`Page ${page} of ${totalPages}`}</span>
+          <span> {`Page ${page} of ${!totalPages ? "..." : totalPages}`}</span>
           <button
             onClick={() => handlePageChange(page + 1)}
             disabled={page === totalPages}
@@ -81,6 +72,8 @@ products?.
             Next page
           </button>
         </div>
+
+        <SortingSelector handleSorting={handleSorting} />
 
         <CategorySelector
           handleSelectedCategory={handleSelectedCategory}
@@ -90,7 +83,7 @@ products?.
         />
 
         <section className="cards">
-          {productState?.map((product) => (
+          {products?.data?.map((product) => (
             <div key={product.product_id} className="card">
               <div className="card__image-container">
                 <img src={product.image_url as string} />
@@ -116,6 +109,22 @@ products?.
           ))}
         </section>
       </main>
+
+      <div className="pages">
+        <button
+          onClick={() => handlePageChange(page - 1)}
+          disabled={page === 1}
+        >
+          Previous page
+        </button>
+        <span> {`Page ${page} of ${totalPages}`}</span>
+        <button
+          onClick={() => handlePageChange(page + 1)}
+          disabled={page === totalPages}
+        >
+          Next page
+        </button>
+      </div>
     </div>
   );
 };

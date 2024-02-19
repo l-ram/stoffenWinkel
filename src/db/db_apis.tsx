@@ -151,13 +151,20 @@ export const createOrder = async (checkout: CheckoutData) => {
   return newOrder;
 };
 
-export const useGetProducts = (page: number, itemsPerPage: number) => {
+export const useGetProducts = (
+  page: number,
+  itemsPerPage: number,
+  category: string
+) => {
   return useQuery({
-    queryKey: ["products", { page }],
+    queryKey: ["products", { page, category }],
     queryFn: async () => {
-      const products = await supabase
-        .from("catalog")
-        .select("*", { count: "exact" })
+      let query = supabase.from("catalog").select("*", { count: "exact" });
+
+      if (category && category !== "All") {
+        query = query.eq("category_id", category);
+      }
+      const products = await query
         .range((page - 1) * itemsPerPage, page * itemsPerPage - 1)
         .returns<Database["public"]["Tables"]["catalog"]["Row"][]>();
 
