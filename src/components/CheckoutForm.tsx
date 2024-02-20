@@ -7,12 +7,17 @@ import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "../context/SessionContext";
 import { useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material/";
 
 const CheckoutForm = () => {
   const session = useSession();
   const userId: string = session?.user.id as string;
+
+  const [loading, isLoading] = useState<boolean>(false);
+  const [error, isError] = useState<string>();
+
   const queryClient = useQueryClient();
-  const { data: basketItems } = useCartItems();
+  const { data: basketItems } = useCartItems(session?.user.id as string);
   const navigate = useNavigate();
 
   const [checkoutData, setCheckoutData] = useState<CheckoutData>({
@@ -33,24 +38,17 @@ const CheckoutForm = () => {
     });
   }, [session]);
 
-  console.log(checkoutData.total);
-
   const mutation = useMutation({
     mutationFn: createOrder,
-    onMutate: () => {
-      console.log("does mutate run?");
-    },
+    onMutate: () => {},
     onSuccess: () => {
-      console.log("does success run?");
       queryClient.invalidateQueries({
         queryKey: ["basket"],
       });
-      console.log("mutate ran:");
     },
   });
 
   const handleCheckoutFormSubmit = (event: FormEvent) => {
-    console.log("button clicked");
     event.preventDefault();
     mutation.mutate(checkoutData);
     navigate("/orderConfirmation");
@@ -75,6 +73,7 @@ const CheckoutForm = () => {
   return (
     <div className="checkout_form">
       <div className="basket_summary">
+        {isLoading && <CircularProgress />}
         <h3>Order summary</h3>
         <ul>
           {basketItems?.map((b) => (
@@ -101,7 +100,7 @@ const CheckoutForm = () => {
       <div className="checkout_container">
         <div className="checkout-container">
           <h3 className="heading-3">Credit card checkout</h3>
-          <span>Total: €{totalPrice as number}</span>
+          <h1>Total: €{totalPrice?.toFixed(2)}</h1>
           <div>
             <form onSubmit={handleCheckoutFormSubmit}>
               <label>

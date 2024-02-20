@@ -1,13 +1,16 @@
 import { useSession } from "../context/SessionContext";
 import { Database } from "../types/db";
-import { useEffect, useState } from "react";
 import { supabase } from "../config/supabase.config";
 import "../pages/basket.scss";
 import { useCartItems } from "../db/db_apis";
 import { useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useState } from "react";
 
 const Basket = () => {
   const session = useSession();
+  const [basketError, setBasketError] = useState<string>();
+
   const {
     data: basketItems,
     isError,
@@ -15,17 +18,10 @@ const Basket = () => {
     isLoading,
   } = useCartItems(session?.user.id as string);
 
-  const [basket, setBasket] = useState<
-    Database["public"]["Tables"]["basket"]["Row"][] | null
-  >();
   let basketTotal: number = 0;
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setBasket(basketItems);
-  }, []);
-
-  basket?.forEach((x) => {
+  basketItems?.forEach((x) => {
     basketTotal += x.price * x.quantity;
   });
 
@@ -35,16 +31,13 @@ const Basket = () => {
       .delete()
       .eq("product_id", productId);
     if (error) {
-      alert(error.message);
+      setBasketError(error.message);
     } else {
-      console.log("Item removed!");
       const { data } = await supabase
         .from("basket")
         .select("*")
         .eq("user_id", session?.user.id as string)
         .returns<Database["public"]["Tables"]["basket"]["Row"][]>();
-      console.log("where is my basket?:", data);
-      setBasket(data);
     }
   };
 
@@ -55,14 +48,13 @@ const Basket = () => {
     });
 
     if (error) {
-      alert(error.message);
+      setBasketError(error.message);
     } else {
       const { data } = await supabase
         .from("basket")
         .select("*")
         .eq("user_id", session?.user.id as string)
         .returns<Database["public"]["Tables"]["basket"]["Row"][]>();
-      setBasket(data);
     }
   };
 
@@ -73,14 +65,13 @@ const Basket = () => {
     });
 
     if (error) {
-      alert(error.message);
+      setBasketError(error.message);
     } else {
       const { data } = await supabase
         .from("basket")
         .select("*")
         .eq("user_id", session?.user.id as string)
         .returns<Database["public"]["Tables"]["basket"]["Row"][]>();
-      setBasket(data);
     }
   };
 
@@ -88,19 +79,27 @@ const Basket = () => {
     navigate("/checkout");
   };
 
+  let shipping: number = 5;
+
+  if (basketItems) {
+    basketItems?.length < 1 ? (shipping = 0) : shipping;
+  }
+
   return (
     <div className="wrap cf">
-      {basketItems?.length < 1 && <p>Basket is empty</p>}
       <div className="heading cf">
         <h1>My basket</h1>
-        <a href="#" className="continue">
-          Continue Shopping
-        </a>
       </div>
+
+      {isLoading && <CircularProgress />}
+      {isError && <p>{error.message}</p>}
+      {basketError && <h3>{basketError}</h3>}
+
+      {basketItems && basketItems.length < 1 && <p>Basket is empty</p>}
 
       <div className="cart">
         <ul className="cartWrap">
-          {basket?.map((b) => (
+          {basketItems?.map((b) => (
             <li className="items odd" key={b.product_id}>
               <div className="infoWrap">
                 <div className="cartSection">
@@ -166,16 +165,18 @@ const Basket = () => {
 
           <li className="totalRow">
             <span className="label">Shipping</span>
-            <span className="value">€5.00</span>
+            <span className="value">{`€${shipping}`}</span>
           </li>
 
           <li className="totalRow final">
             <span className="label">Total</span>
-            <span className="value">€{(basketTotal + 5).toFixed(2)}</span>
+            <span className="value">
+              €{(basketTotal + shipping).toFixed(2)}
+            </span>
           </li>
 
           <button
-            disabled={(basket?.length as number) > 1 ? false : true}
+            disabled={(basketItems?.length as number) > 0 ? false : true}
             className="btn"
             onClick={handleGoToCheckout}
           >

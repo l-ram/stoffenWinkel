@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { supabase } from "../config/supabase.config";
 import { useSession } from "../context/SessionContext";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface usersDB {
   first_name: string;
@@ -13,7 +14,10 @@ interface usersDB {
 
 const Profile = () => {
   const session = useSession();
-
+  const [success, setSuccess] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isError, setError] = useState<string>("");
+  const [avatarFile, setAvatarFile] = useState<boolean>();
   const [profileForm, setProfileForm] = useState<usersDB>({
     first_name: "",
     second_name: "",
@@ -22,8 +26,6 @@ const Profile = () => {
     country: "",
     payment_type: "",
   });
-
-  console.log(profileForm);
 
   const handleUploadAvatar = async (event: any) => {
     const avatarFile = event.target.files[0];
@@ -35,8 +37,8 @@ const Profile = () => {
         upsert: true,
       });
     if (error) {
-      alert(error.message);
-    } else alert("File uploaded!");
+      setError(error.message as string);
+    } else setAvatarFile(true);
     return data;
   };
 
@@ -56,8 +58,9 @@ const Profile = () => {
     const { data } = await supabase
       .from("users")
       .select("*")
-      .eq("user_id", session?.user.id);
-    console.log("select ran", data);
+      .eq("user_id", session?.user.id as string);
+    setLoading(true);
+
     if (data?.length > 0) {
       console.log("users exists, run update");
       const { data, error } = await supabase
@@ -70,13 +73,13 @@ const Profile = () => {
           country: profileForm.country,
           payment_type: profileForm.payment_type,
         })
-        .eq("user_id", session?.user.id)
+        .eq("user_id", session?.user.id as string)
         .select();
-      console.log("update finished", data);
       if (error) {
-        alert(error.message);
+        setError(error.message);
       } else {
-        alert("Profile updated!");
+        setSuccess(true);
+        setLoading(false);
       }
     } else {
       console.log("user doesn't exists, running insert");
@@ -92,13 +95,14 @@ const Profile = () => {
           payment_type: profileForm.payment_type,
         })
         .select();
-      console.log("insert finished", data);
+      setLoading(false);
       if (error) {
-        alert(error.message);
+        setError(error.message);
       } else {
-        alert("Profile updated!");
+        setSuccess(true);
       }
     }
+    setLoading(false);
   };
 
   return (
@@ -106,6 +110,10 @@ const Profile = () => {
       <h2>Update your profile</h2>
 
       <h3>You can change your avatar</h3>
+
+      {isError && <div style={{ color: "red" }}>{isError}</div>}
+      {avatarFile && <div>Avatar Uploaded Successfully!</div>}
+
       <input
         name="avatar"
         type="file"
@@ -154,7 +162,9 @@ const Profile = () => {
         <br></br>
         <br></br>
         <button>Update</button>
+        {loading && <CircularProgress />}
       </form>
+      {success && <div>Profile updated!</div>}
     </div>
   );
 };

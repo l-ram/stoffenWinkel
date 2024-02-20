@@ -65,6 +65,7 @@ export const useCartItems = (userId: string) => {
         .from("basket")
         .select("*")
         .eq("user_id", userId)
+        .order("product_id")
         .returns<Database["public"]["Tables"]["basket"]["Row"][]>();
 
       if (signal) {
