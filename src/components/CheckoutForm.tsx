@@ -12,12 +12,12 @@ import { CircularProgress } from "@mui/material/";
 const CheckoutForm = () => {
   const session = useSession();
   const userId: string = session?.user.id as string;
-
-  const [loading, isLoading] = useState<boolean>(false);
-  const [error, isError] = useState<string>();
-
   const queryClient = useQueryClient();
-  const { data: basketItems } = useCartItems(session?.user.id as string);
+  const {
+    data: basketItems,
+    isLoading,
+    error,
+  } = useCartItems(session?.user.id as string);
   const navigate = useNavigate();
 
   const [checkoutData, setCheckoutData] = useState<CheckoutData>({
@@ -48,6 +48,8 @@ const CheckoutForm = () => {
     },
   });
 
+  console.log(mutation);
+
   const handleCheckoutFormSubmit = (event: FormEvent) => {
     event.preventDefault();
     mutation.mutate(checkoutData);
@@ -73,7 +75,8 @@ const CheckoutForm = () => {
   return (
     <div className="checkout_form">
       <div className="basket_summary">
-        {isLoading && <CircularProgress />}
+        {isLoading ? <CircularProgress /> : null}
+        {error ? <p>{error.message}</p> : null}
         <h3>Order summary</h3>
         <ul>
           {basketItems?.map((b) => (
@@ -158,6 +161,16 @@ const CheckoutForm = () => {
               <button className="checkout-btn" type="submit">
                 {"Place order"}
               </button>
+
+              {mutation.isPending ? (
+                <div>
+                  <p>Processing order</p>
+                  <CircularProgress />
+                </div>
+              ) : null}
+              {mutation.isError ? (
+                <div>Sorry, something went wrong, try again!</div>
+              ) : null}
             </form>
           </div>
         </div>

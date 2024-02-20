@@ -7,6 +7,8 @@ interface LoginRegister {}
 const LoginRegister = ({}: LoginRegister) => {
   let navigate = useNavigate();
 
+  const [error, setError] = useState<string>();
+
   const [emailRegisterData, setEmailRegisterData] = useState({
     firstName: "",
     lastName: "",
@@ -33,7 +35,7 @@ const LoginRegister = ({}: LoginRegister) => {
   //   Submit to backend
   const handleEmailRegister = async (event: FormEvent) => {
     event.preventDefault();
-    await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: emailRegisterData.email,
       password: emailRegisterData.password,
       options: {
@@ -43,7 +45,11 @@ const LoginRegister = ({}: LoginRegister) => {
         },
       },
     });
-    navigate("/");
+
+    if (error) {
+      setError(error.message);
+    }
+    navigate("/loginRegister");
   };
 
   const handleEmailLoginChange = (
@@ -61,33 +67,32 @@ const LoginRegister = ({}: LoginRegister) => {
   const handleEmailLogin = async (event: FormEvent) => {
     event.preventDefault();
     console.log("login ran");
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: emailLoginData.email,
-        password: emailLoginData.password,
-      });
-      if (error) {
-        alert(error.message);
-        navigate("/");
-      } else {
-        alert("You are logged in!");
-        console.log("Supabase response:", data);
-        navigate("/");
-      }
-    } catch (error) {
-      alert(error);
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: emailLoginData.email,
+      password: emailLoginData.password,
+    });
+    console.log(error?.message);
+    if (error) {
+      setError(error?.message);
+      navigate("/loginRegister");
+    } else {
+      navigate("/");
     }
   };
 
   return (
     <div>
       <h2>Welcome back! Sign in here</h2>
+
+      {error ? <p style={{ color: "red" }}>{error}</p> : null}
+
       <span>Sign in with your email and password</span>
       <form onSubmit={handleEmailLogin}>
         <input
           placeholder="email"
           type="email"
           name="email"
+          required={true}
           onChange={handleEmailLoginChange}
         />
 
@@ -95,6 +100,7 @@ const LoginRegister = ({}: LoginRegister) => {
           placeholder="password"
           type="password"
           name="password"
+          required={true}
           onChange={handleEmailLoginChange}
         />
         <button type="submit">Log in</button>
@@ -111,6 +117,7 @@ const LoginRegister = ({}: LoginRegister) => {
           placeholder="first name"
           type="text"
           name="firstName"
+          required={true}
           onChange={handleEmailRegisterChange}
         />
 
@@ -118,6 +125,7 @@ const LoginRegister = ({}: LoginRegister) => {
           placeholder="last name"
           type="text"
           name="lastName"
+          required={true}
           onChange={handleEmailRegisterChange}
         />
 
@@ -125,6 +133,7 @@ const LoginRegister = ({}: LoginRegister) => {
           placeholder="email"
           type="email"
           name="email"
+          required={true}
           onChange={handleEmailRegisterChange}
         />
 
@@ -132,6 +141,7 @@ const LoginRegister = ({}: LoginRegister) => {
           placeholder="password"
           type="password"
           name="password"
+          required={true}
           onChange={handleEmailRegisterChange}
         />
 

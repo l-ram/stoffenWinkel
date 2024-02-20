@@ -14,7 +14,7 @@ const OrderConfirmation = () => {
   useEffect(() => {
     countDown > 0 && setTimeout(() => setCountDown(countDown - 1), 1000);
     if (countDown === 0) {
-      navigate("/home");
+      navigate("/");
     }
   }, [countDown]);
 
