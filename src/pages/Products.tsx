@@ -21,7 +21,7 @@ const Products = () => {
     isLoading,
     isError,
     error,
-  } = useGetProducts(page, itemsPerPage, selectedCategory);
+  } = useGetProducts(page, itemsPerPage, selectedCategory, isSorted);
 
   const totalPages = Math.ceil((products?.count as number) / itemsPerPage);
   console.log("total pages:", totalPages);
@@ -31,10 +31,16 @@ const Products = () => {
     setPage(newPage);
   };
 
-  const handleSorting = (e: React.MouseEvent<HTMLInputElement>) => {
+  const handleSorting = (e: React.MouseEvent<HTMLOptionElement>) => {
     e.preventDefault();
+    console.log("click works");
     const sort = e.currentTarget.value as string;
-    setSorting(sort);
+
+    if (sort === "null") {
+      setSorting(null);
+    } else {
+      setSorting(sort);
+    }
   };
 
   console.log(isSorted);

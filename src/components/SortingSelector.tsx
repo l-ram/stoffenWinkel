@@ -1,20 +1,14 @@
 interface SortingSelector {
-  handleSorting: (e: any) => any;
+  handleSorting: (e: any) => void;
 }
 
 const SortingSelector = ({ handleSorting }: SortingSelector) => {
   return (
     <div className="sortingSelector">
-      <select name="Sort by:" id="" defaultValue={"Sort by:"}>
-        <option defaultValue={"Sort by:"} value={"low"}>
-          Sort by:
-        </option>
-        <option onClick={handleSorting} value={"low"}>
-          Lowest Price
-        </option>
-        <option onClick={handleSorting} value={"high"}>
-          Highest Price
-        </option>
+      <select onClick={handleSorting} id="">
+        <option value={"null"}>Sort by: (Default) Name</option>
+        <option value={"low"}>Lowest Price</option>
+        <option value={"high"}>Highest Price</option>
       </select>
     </div>
   );

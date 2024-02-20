@@ -154,18 +154,29 @@ export const createOrder = async (checkout: CheckoutData) => {
 export const useGetProducts = (
   page: number,
   itemsPerPage: number,
-  category: string
+  category: string,
+  sort: string | null
 ) => {
   return useQuery({
-    queryKey: ["products", { page, category }],
+    queryKey: ["products", { page, category, sort }],
     queryFn: async () => {
       let query = supabase.from("catalog").select("*", { count: "exact" });
 
       if (category && category !== "All") {
         query = query.eq("category_id", category);
       }
+
+      if (sort === "low") {
+        query = query.order("price");
+      } else if (sort === "high") {
+        query = query.order("price", { ascending: false });
+      } else {
+        query = query.order("name");
+      }
+
       const products = await query
         .range((page - 1) * itemsPerPage, page * itemsPerPage - 1)
+        .order("price")
         .returns<Database["public"]["Tables"]["catalog"]["Row"][]>();
 
       return products;
