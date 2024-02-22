@@ -1,0 +1,147 @@
+a {
+  font-size: small;
+}
+
+.app__navbar {
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0.25rem 1rem;
+}
+
+.app__navbar-logo > Logo {
+  color: var(--pinkTheme);
+}
+
+.app__navbar-search {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  border-radius: 24px;
+  background-color: #efefef;
+  border: 1px solid lightgray;
+  transition: all 0.2s ease-in;
+  overflow: hidden;
+}
+
+.app__navbar-links {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+
+.app__navbar-links li {
+  padding: 1rem;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: lightgray;
+}
+
+.app__navbar-searchInput {
+  font-size: 18px;
+  font-weight: lighter;
+  letter-spacing: 1.7;
+  height: 18px;
+  padding: 12px;
+  border: none;
+  width: 100%;
+  margin-left: 16px;
+  background-color: #efefef;
+}
+
+.app__navbar-search > Search {
+  font-size: 250%;
+  padding: 14px;
+  height: 22px !important;
+  margin-right: 0px;
+  transition: all 0.2s ease-in;
+  cursor: pointer;
+}
+
+.app__navbar-search > Search:hover {
+  background-color: rgba(85, 84, 84, 0.13);
+}
+.app__navbar-search:hover {
+  border: 1px solid rgb(190, 188, 188);
+}
+
+.app__categories {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--tealTheme);
+}
+
+.app__categories-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  text-decoration: none;
+}
+
+.app__categories > ul li {
+  color: white;
+  padding: 1rem;
+  list-style: none;
+}
+
+.app__categories > ul li a {
+  color: white;
+}
+
+.app__categories > ul li a:hover {
+  color: white;
+
+  text-decoration: underline;
+}
+
+.app__navbar-smallscreen {
+  display: none;
+}
+
+.app__navbar-smallscreen_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 25%;
+  height: 100vh;
+  background-color: white;
+  transition: 0.5s ease;
+  flex-direction: column;
+  z-index: 5;
+}
+
+.app__navbar-smallscreen_overlay .overlay__close {
+  font-size: 27px;
+  color: var(--tealTheme);
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.app__navbar-smallscreen_links {
+}
+
+@media screen and (max-width: 800px) {
+  .app__navbar-smallscreen {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .app__categories {
+    display: none;
+  }
+
+  .app__navbar {
+    display: none;
+  }
+}

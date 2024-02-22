@@ -1,0 +1,21 @@
+* {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+a,
+a:hover,
+:active,
+:visited,
+:link {
+  text-decoration: none;
+}
+
+:root {
+  --tealTheme: #64b0b0;
+  --pinkTheme: #ff7ed8;
+  --greyTheme: #979696;
+}

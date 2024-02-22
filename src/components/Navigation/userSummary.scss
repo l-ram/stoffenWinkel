@@ -1,0 +1,42 @@
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.userSummary {
+  display: flex;
+  align-items: center;
+  background-color: whitesmoke;
+  border-radius: 50px;
+  padding-left: 25px;
+}
+
+.userSummary:hover {
+  background-color: var(--tealTheme);
+  transition: 0.25s ease;
+  cursor: pointer;
+}
+
+.userSummary__avatar {
+  margin: 5px;
+}
+
+.userSummary__list {
+  position: absolute;
+  top: 80px;
+  width: 100;
+  list-style: none;
+  background-color: whitesmoke;
+  border-radius: 10px;
+  box-shadow: 1px 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+.userSummary__list li {
+  font-size: smaller;
+}
+
+.userSummary__list li:hover {
+  background-color: lightgrey;
+  transition: 0.1s ease;
+  border-radius: 10px;
+}
