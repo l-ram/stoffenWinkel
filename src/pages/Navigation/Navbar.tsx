@@ -107,7 +107,7 @@ const Navbar = ({}: NavBar) => {
         </Link>
 
         {toggleMenu && (
-          <div className="app__navbar-smallscreen_overlay flex__center slide-bottom">
+          <div className="app__navbar-smallscreen_overlay">
             <Close
               className="overlay__close"
               onClick={() => {
@@ -116,7 +116,7 @@ const Navbar = ({}: NavBar) => {
             />
             <ul className="app__navbar-smallscreen-links">
               {session ? (
-                <Fragment>
+                <div>
                   <li>
                     <Link to="/products">Products</Link>
                   </li>
@@ -131,19 +131,21 @@ const Navbar = ({}: NavBar) => {
                       <Logout onClick={handleEmailLogout} /> Logout
                     </div>
                   </li>
-                </Fragment>
+                </div>
               ) : (
                 <Fragment>
-                  <li>Products</li>
+                  <li>
+                    <Link to="/products">Products</Link>
+                  </li>
                   <li>
                     <Link to="/loginRegister">
                       <AccountCircle
                         sx={{
-                          color: muiGrey,
+                          marginBottom: "-6px",
                         }}
                       />{" "}
+                      Login
                     </Link>
-                    Login
                   </li>
                 </Fragment>
               )}
