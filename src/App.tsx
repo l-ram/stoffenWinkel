@@ -10,6 +10,7 @@ import Account from "./pages/Account";
 import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
+import Footer from "./pages/Navigation/Footer";
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
           <Route path="/orderConfirmation" element={<OrderConfirmation />} />
         </Route>
       </Routes>
+      <Footer />
     </>
   );
 };

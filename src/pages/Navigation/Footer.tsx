@@ -1,96 +1,77 @@
-import { } "@mui/icons-material"
+import "./footer.scss";
+import { Instagram, Facebook, X, Language } from "@mui/icons-material";
 
 const Footer = () => {
   return (
     <footer>
-      <section className="footer-section-one">
-        <div className="content-area ">
-          <div className="footer">
-            <div className="links">
+      <section className="footerSectionOne">
+        <div className="content-area">
+          <div className="footerSectionOne__footer">
+            <div className="footerSectionOne__links">
               <h3>Shop</h3>
               <ul>
                 <li>
                   <a href="#">Gift cards</a>
                 </li>
                 <li>
-                  <a href="#">Etsy blog</a>
+                  <a href="#">Returns</a>
+                </li>
+                <li>
+                  <a href="#">Deliveries</a>
                 </li>
               </ul>
             </div>
-            <div className="links">
-              <h3>Sell</h3>
-              <ul>
-                <li>
-                  <a href="#">Sell on Etsy</a>
-                </li>
-                <li>
-                  <a href="#">Teams</a>
-                </li>
-                <li>
-                  <a href="#">Forums</a>
-                </li>
-                <li>
-                  <a href="#">Affiliates</a>
-                </li>
-              </ul>
-            </div>
-            <div className="links">
+            <div className="footerSectionOne__links">
               <h3>About</h3>
               <ul>
                 <li>
-                  <a href="#">Etsy, Inc.</a>
+                  <a href="#">LR, Inc.</a>
                 </li>
                 <li>
-                  <a href="#">Policies</a>
-                </li>
-                <li>
-                  <a href="#">Investors</a>
+                  <a href="#">Contact us</a>
                 </li>
                 <li>
                   <a href="#">Careers</a>
                 </li>
                 <li>
-                  <a href="#">Press</a>
-                </li>
-                <li>
-                  <a href="#">Impact</a>
+                  <a href="#">Blog</a>
                 </li>
               </ul>
             </div>
-            <div className="links">
+            <div className="footerSectionOne__links">
               <h3>Help</h3>
               <ul>
                 <li>
-                  <a href="#">Help Centre</a>
+                  <a href="#">Customer Service</a>
                 </li>
                 <li>
                   <a href="#">Privacy settings</a>
                 </li>
+                <li>
+                  <a href="#">Sitemap</a>
+                </li>
               </ul>
-              <button> Download the Etsy App</button>
-              <div className="social">
-                <ion-icon name="logo-instagram"></ion-icon>
-                <ion-icon name="logo-facebook"></ion-icon>
-                <ion-icon name="logo-pinterest"></ion-icon>
-                <ion-icon name="logo-twitter"></ion-icon>
-                <ion-icon name="logo-youtube"></ion-icon>
+              <button> Signup for Newsletter</button>
+              <div className="footerSectionOne__social">
+                <Instagram />
+                <Facebook />
+                <X />
               </div>
             </div>
           </div>
         </div>
       </section>
-      <section className="footer-section-two">
+      <section className="footerSectionTwo">
         <div className="content-area">
-          <div className="copyright">
-            <div className="footer-left">
-              <ion-icon name="globe-outline"></ion-icon>
-              <p></p>Jamaica | English(UK) | $(USD)
+          <div className="footerSectionTwo__copyright">
+            <div className="footerSectionTwo__footerLeft">
+              <Language />
+              <p></p>België | Engels | €(EUR)
             </div>
-            <div className="footer-right">
-              <p>© 2020 Etsy, Inc.</p>
+            <div className="footerSectionTwo__footerRight">
+              <p>© 2024 LR, Inc.</p>
               <a href="#">Terms of Use</a>
               <a href="#">Privacy</a>
-              <a href="#">Interest-based ads</a>
             </div>
           </div>
         </div>
