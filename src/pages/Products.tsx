@@ -1,9 +1,9 @@
-import "../pages/products.css";
+import "../pages/products.scss";
 import { addToBasket } from "../db/db_apis";
 import { useGetProducts } from "../db/db_apis";
 import { CircularProgress } from "@mui/material/";
-import { useEffect, useState } from "react";
-import { Database } from "../types/db";
+import { Favorite, FavoriteBorderOutlined } from "@mui/icons-material";
+import { useState } from "react";
 import CategorySelector from "../components/CategorySelector";
 import SortingSelector from "../components/SortingSelector";
 
@@ -14,6 +14,7 @@ const Products = () => {
   const [isSorted, setSorting] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const categories = ["All", "Fabric", "Wool", "Needles"];
+  const [heart, setHeart] = useState<string>("disabled");
 
   // Products hook
   const {
@@ -59,10 +60,7 @@ const Products = () => {
 
   return (
     <div>
-      <main>
-        {isLoading && <CircularProgress />}
-        {isError && <p>{error.message}</p>}
-
+      <div className="sorting">
         <div className="pages">
           <button
             onClick={() => handlePageChange(page - 1)}
@@ -78,19 +76,25 @@ const Products = () => {
             Next page
           </button>
         </div>
-
         <SortingSelector handleSorting={handleSorting} />
+      </div>
 
-        <CategorySelector
-          handleSelectedCategory={handleSelectedCategory}
-          isFiltered={isFiltered}
-          selected={selectedCategory}
-          categories={categories}
-        />
+      <div className="products">
+        {isLoading && <CircularProgress />}
+        {isError && <p>{error.message}</p>}
 
-        <section className="cards">
+        <div className="products__selectionColumn">
+          <CategorySelector
+            handleSelectedCategory={handleSelectedCategory}
+            isFiltered={isFiltered}
+            selected={selectedCategory}
+            categories={categories}
+          />
+        </div>
+
+        <div className="products__cards">
           {products?.data?.map((product) => (
-            <div key={product.product_id} className="card">
+            <div key={product.product_id} className="products__card">
               <div className="card__image-container">
                 <img src={product.image_url as string} />
               </div>
@@ -113,10 +117,10 @@ const Products = () => {
               </div>
             </div>
           ))}
-        </section>
-      </main>
+        </div>
+      </div>
 
-      <div className="pages">
+      <div className="pagesBottom">
         <button
           onClick={() => handlePageChange(page - 1)}
           disabled={page === 1}

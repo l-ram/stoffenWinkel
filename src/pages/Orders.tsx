@@ -18,11 +18,13 @@ const Orders = () => {
           {isLoading && <CircularProgress />}
 
           {data?.data?.map((x) => (
-            <div style={{ backgroundColor: "lightcyan" }}>
-              <h4>Order Id: {x.order_id}</h4>
-              <h2 style={{ color: "purple" }}>{x.order_date}</h2>
-              <h3>Amount: {x.shipping_address}</h3>
-              <h4>Address: {x.order_total}</h4>
+            <div style={{ backgroundColor: "whitesmoke", padding: "1rem" }}>
+              <div style={{ backgroundColor: "white", padding: "1rem" }}>
+                <h4>Order Id: {x.order_id}</h4>
+                <h2 style={{ color: "var(--tealTheme)" }}>{x.order_date}</h2>
+                <h3>Amount: {x.shipping_address}</h3>
+                <h4>Address: {x.order_total}</h4>
+              </div>
             </div>
           ))}
         </div>

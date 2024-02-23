@@ -13,9 +13,15 @@ const CategorySelector = ({
 }: CategorySelector) => {
   return (
     <div className="categorySelector">
-      <ul>
+      Filter by category
+      <ul style={{ listStyle: "none", cursor: "pointer" }}>
         {categories.map((x) => (
-          <li key={x}>
+          <li
+            key={x}
+            style={{
+              fontWeight: selected === x ? "bolder" : "normal",
+            }}
+          >
             <p onClick={handleSelectedCategory}>{x}</p>
           </li>
         ))}

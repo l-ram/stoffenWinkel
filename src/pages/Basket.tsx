@@ -5,7 +5,16 @@ import "../pages/basket.scss";
 import { useCartItems } from "../db/db_apis";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import {
+  Delete,
+  Remove,
+  Add,
+  Shop,
+  Shop2,
+  ShoppingCart,
+} from "@mui/icons-material";
 import { useState } from "react";
+import { Button } from "@mui/material";
 
 const Basket = () => {
   const session = useSession();
@@ -122,27 +131,20 @@ const Basket = () => {
                   <p>{`€${(b.price * b.quantity).toFixed(2)}`}</p>
                 </div>
                 <div className="cartSection removeWrap">
-                  <button
+                  <Add
                     className="increment"
                     onClick={() => handleIncrement(b.product_id)}
-                  >
-                    <h1>+</h1>
-                  </button>
+                  />
                   {b.quantity >= 2 ? (
-                    <button
-                      className="increment"
+                    <Remove
+                      className="decrement"
                       onClick={() => handleDecrement(b.product_id)}
-                    >
-                      <h1>-</h1>
-                    </button>
+                    />
                   ) : null}
-                  <a
-                    href="#"
+                  <Delete
                     className="remove"
                     onClick={() => handleRemoveItem(b.product_id)}
-                  >
-                    x
-                  </a>
+                  />
                 </div>
               </div>
             </li>
@@ -175,13 +177,15 @@ const Basket = () => {
             </span>
           </li>
 
-          <button
+          <Button
             disabled={(basketItems?.length as number) > 0 ? false : true}
-            className="btn"
             onClick={handleGoToCheckout}
+            variant="contained"
+            color="success"
+            startIcon={<ShoppingCart />}
           >
             Checkout
-          </button>
+          </Button>
         </ul>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { useCartItems } from "../db/db_apis";
-import "../components/checkoutform.css";
+import "../components/checkoutform.scss";
 import { FormEvent, useEffect, useState } from "react";
 import { CheckoutData } from "../types/types";
 import { createOrder } from "../db/db_apis";
@@ -74,7 +74,7 @@ const CheckoutForm = () => {
 
   return (
     <div className="checkout_form">
-      <div className="basket_summary">
+      <div className="basketSummary">
         {isLoading ? <CircularProgress /> : null}
         {error ? <p>{error.message}</p> : null}
         <h3>Order summary</h3>
@@ -83,7 +83,12 @@ const CheckoutForm = () => {
             <li key={b.product_id}>
               <div className="infoWrap">
                 <div className="cartSection">
-                  <img src={b.image_url} alt="" className="itemImg" />
+                  <img
+                    height="100"
+                    src={b.image_url}
+                    alt=""
+                    className="itemImg"
+                  />
                   <p className="itemNumber">{b.category_id}</p>
                   <h3>
                     {b.quantity.toString()} x {b.name}
@@ -100,7 +105,7 @@ const CheckoutForm = () => {
         </ul>
       </div>
 
-      <div className="checkout_container">
+      <div className="checkoutContainer">
         <div className="checkout-container">
           <h3 className="heading-3">Credit card checkout</h3>
           <h1>Total: €{totalPrice?.toFixed(2)}</h1>
@@ -116,28 +121,25 @@ const CheckoutForm = () => {
                   required={true}
                 />
               </label>
-              <label>
-                {" "}
-                Payment type
-                <select
-                  name="paymentType"
-                  required={true}
-                  onChange={handleCheckoutChange}
-                >
-                  <option>Card</option>
-                  <option>Paypal</option>
-                </select>
-              </label>
-              <label>
-                {" "}
-                Card number
-                <input
-                  className="input input-field"
-                  name="cardNumber"
-                  type="number"
-                  required={true}
-                />
-              </label>
+              <label> Payment type</label>
+              <select
+                name="paymentType"
+                required={true}
+                onChange={handleCheckoutChange}
+              >
+                <option>Card</option>
+                <option>Paypal</option>
+              </select>
+              <br></br>
+
+              <label> Card number </label>
+              <input
+                className="input input-field"
+                name="cardNumber"
+                type="number"
+                required={true}
+              />
+
               <label>
                 {" "}
                 Code
@@ -158,6 +160,7 @@ const CheckoutForm = () => {
                   required={true}
                 />
               </label>
+              <br></br>
               <button className="checkout-btn" type="submit">
                 {"Place order"}
               </button>

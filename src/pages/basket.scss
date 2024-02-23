@@ -256,10 +256,10 @@ a.remove {
     padding: 0.75em 0;
     border-radius: 0 1em 1em 0;
     text-align: center;
-    border: 1px solid #82ca9c;
+    border: 1px solid var(--pinkTheme);
     &:hover {
-      border: 1px solid #f69679;
-      background: #f69679;
+      border: 1px solid var(--pinkTheme);
+      background: var(--pinkTheme);
     }
   }
 }
@@ -272,7 +272,7 @@ a.remove {
     font-size: 1em;
     padding: 1em 3em;
     color: #fff;
-    background: #82ca9c;
+    background: var(--pinkTheme);
     font-weight: bold;
     border-radius: 50px;
     float: right;
@@ -289,7 +289,7 @@ a.remove {
   &:hover,
   &:focus,
   &:active {
-    background: #f69679;
+    background: var(--pinkTheme);
     &:after {
       right: -10px;
     }

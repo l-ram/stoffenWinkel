@@ -1,0 +1,33 @@
+.checkout_form {
+  display: flex;
+  flex: row;
+  justify-content: space-around;
+}
+
+.basketSummary {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+ul {
+  list-style: none;
+}
+
+.checkoutContainer {
+  background-color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  box-shadow: 5px 15px 5px rgba(0, 0, 0, 0.2);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+input {
+  width: 100%;
+}
