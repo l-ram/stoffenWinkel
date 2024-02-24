@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import { supabase } from "../config/supabase.config";
 import { useSession } from "../context/SessionContext";
 import CircularProgress from "@mui/material/CircularProgress";
+import "./profile.scss";
 
 interface usersDB {
   first_name: string;
@@ -106,22 +107,23 @@ const Profile = () => {
   };
 
   return (
-    <div>
+    <div className="profile">
       <h2>Update your profile</h2>
+      <div className="profile__avatar">
+        <h3>You can change your avatar</h3>
 
-      <h3>You can change your avatar</h3>
+        {isError && <div style={{ color: "red" }}>{isError}</div>}
+        {avatarFile && <div>Avatar Uploaded Successfully!</div>}
 
-      {isError && <div style={{ color: "red" }}>{isError}</div>}
-      {avatarFile && <div>Avatar Uploaded Successfully!</div>}
+        <input
+          name="avatar"
+          type="file"
+          accept="image/jpeg, image/png"
+          onChange={handleUploadAvatar}
+        />
+      </div>
 
-      <input
-        name="avatar"
-        type="file"
-        accept="image/jpeg, image/png"
-        onChange={handleUploadAvatar}
-      />
-
-      <form onSubmit={handleProfileUpdate}>
+      <form className="profile__form" onSubmit={handleProfileUpdate}>
         <h3>Update your personal details</h3>
         <input
           name="first_name"

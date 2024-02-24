@@ -1,6 +1,7 @@
 import { useSession } from "../context/SessionContext";
 import { useGetOrders } from "../db/db_apis";
 import { CircularProgress } from "@mui/material/";
+import "./orders.scss";
 
 const Orders = () => {
   const session = useSession();
@@ -9,25 +10,25 @@ const Orders = () => {
   );
 
   return (
-    <div>
+    <div className="orders">
       {session && (
-        <div>
-          <h1>Order History</h1>
+        <>
+          <h1 className="orders__title">Order History</h1>
 
-          {isError && <p>{error.message}</p>}
+          {isError && <p className="orders__error">{error.message}</p>}
           {isLoading && <CircularProgress />}
 
           {data?.data?.map((x) => (
-            <div style={{ backgroundColor: "whitesmoke", padding: "1rem" }}>
-              <div style={{ backgroundColor: "white", padding: "1rem" }}>
+            <div className="orders__table">
+              <div className="orders__row">
                 <h4>Order Id: {x.order_id}</h4>
-                <h2 style={{ color: "var(--tealTheme)" }}>{x.order_date}</h2>
+                <h2>{x.order_date}</h2>
                 <h3>Amount: {x.shipping_address}</h3>
                 <h4>Address: {x.order_total}</h4>
               </div>
             </div>
           ))}
-        </div>
+        </>
       )}
 
       {!session && <h1>Please login to place an order</h1>}
