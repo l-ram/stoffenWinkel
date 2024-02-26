@@ -18,13 +18,10 @@ export const BasketProvider = (props: BasketProviderProps) => {
     return useQuery({
       queryKey: ["basket"],
       queryFn: async () => {
-        const { data, error } = await supabase
+        const { data } = await supabase
           .from("basket")
           .select("*")
           .eq("user_id", session?.user.id as string);
-        if (error) {
-          alert(error.message);
-        }
         return data as unknown as Database["public"]["Tables"]["basket"]["Row"][];
       },
       enabled: Boolean(session),
