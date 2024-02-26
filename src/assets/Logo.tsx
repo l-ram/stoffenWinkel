@@ -1,5 +1,5 @@
 interface LogoProps {
-  size: "150" | "100";
+  size: 150 | 100;
 }
 
 const Logo = ({ size }: LogoProps) => {

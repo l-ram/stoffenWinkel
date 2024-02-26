@@ -3,7 +3,6 @@ import { supabase } from "../config/supabase.config";
 import { Database } from "../types/db";
 import { useSession } from "./SessionContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { subscribe } from "diagnostics_channel";
 
 const BasketContext = createContext<
   Database["public"]["Tables"]["basket"]["Row"][] | undefined

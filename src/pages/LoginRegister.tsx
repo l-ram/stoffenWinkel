@@ -35,7 +35,7 @@ const LoginRegister = ({}: LoginRegister) => {
   //   Submit to backend
   const handleEmailRegister = async (event: FormEvent) => {
     event.preventDefault();
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email: emailRegisterData.email,
       password: emailRegisterData.password,
       options: {
@@ -67,7 +67,7 @@ const LoginRegister = ({}: LoginRegister) => {
   const handleEmailLogin = async (event: FormEvent) => {
     event.preventDefault();
     console.log("login ran");
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email: emailLoginData.email,
       password: emailLoginData.password,
     });

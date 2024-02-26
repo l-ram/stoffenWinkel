@@ -1,12 +1,10 @@
 interface CategorySelector {
-  isFiltered: boolean;
   categories: string[];
   selected: string;
   handleSelectedCategory: (e: any) => void;
 }
 
 const CategorySelector = ({
-  isFiltered,
   categories,
   selected,
   handleSelectedCategory,

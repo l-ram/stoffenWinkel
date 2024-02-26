@@ -11,7 +11,6 @@ const Products = () => {
   const session = useSession();
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(25);
-  const [isFiltered, setFilter] = useState<boolean>(false);
   const [isSorted, setSorting] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const categories = ["All", "Fabric", "Wool", "Needles"];
@@ -86,7 +85,6 @@ const Products = () => {
         <div className="products__selectionColumn">
           <CategorySelector
             handleSelectedCategory={handleSelectedCategory}
-            isFiltered={isFiltered}
             selected={selectedCategory}
             categories={categories}
           />

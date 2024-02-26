@@ -35,7 +35,7 @@ const Basket = () => {
     if (error) {
       setBasketError(error.message);
     } else {
-      const { data } = await supabase
+      await supabase
         .from("basket")
         .select("*")
         .eq("user_id", session?.user.id as string)
@@ -52,7 +52,7 @@ const Basket = () => {
     if (error) {
       setBasketError(error.message);
     } else {
-      const { data } = await supabase
+      await supabase
         .from("basket")
         .select("*")
         .eq("user_id", session?.user.id as string)
@@ -69,7 +69,7 @@ const Basket = () => {
     if (error) {
       setBasketError(error.message);
     } else {
-      const { data } = await supabase
+      await supabase
         .from("basket")
         .select("*")
         .eq("user_id", session?.user.id as string)

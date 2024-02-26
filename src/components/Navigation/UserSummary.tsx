@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSession } from "../../context/SessionContext";
 import { Link } from "react-router-dom";
-import { Avatar, Menu, MenuItem, IconButton } from "@mui/material";
+import { Avatar } from "@mui/material";
 import "./userSummary.scss";
 import { Logout, AccountBox, Assignment, Login } from "@mui/icons-material";
 

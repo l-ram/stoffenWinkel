@@ -62,9 +62,9 @@ const Profile = () => {
       .eq("user_id", session?.user.id as string);
     setLoading(true);
 
-    if (data?.length > 0) {
+    if (data && data?.length > 0) {
       console.log("users exists, run update");
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("users")
         .update({
           first_name: profileForm.first_name,
@@ -84,7 +84,7 @@ const Profile = () => {
       }
     } else {
       console.log("user doesn't exists, running insert");
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("users")
         .insert({
           user_id: session?.user.id,

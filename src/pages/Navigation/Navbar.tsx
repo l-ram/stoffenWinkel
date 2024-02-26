@@ -11,7 +11,6 @@ import {
   Logout,
   Menu,
   Close,
-  Login,
   Home,
 } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
@@ -27,8 +26,6 @@ const Navbar = ({}: NavBar) => {
   const [toggleMenu, setToggleMenu] = useState(false);
 
   const muiPink = "#ff7ed8";
-  const muiGrey = "#979696";
-  const muiTeal = "#64b0b0";
 
   const handleEmailLogout = async () => {
     const { error } = await supabase.auth.signOut();

@@ -19,7 +19,7 @@ export const SessionProvider = (props: SessionProviderProps) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      setSession(session);
+      if (event) setSession(session);
       sessionStorage.setItem("user_token", JSON.stringify(session));
       console.log("session storage updated");
       if (session === null) {

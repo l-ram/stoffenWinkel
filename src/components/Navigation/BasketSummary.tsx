@@ -6,8 +6,6 @@ import { useBasket } from "../../context/BasketContext";
 const BasketSummary = () => {
   const basket = useBasket();
   const [cartCount, setCartCount] = useState(0);
-  const muiPink = "#ff7ed8";
-  const muiGrey = "#979696";
   useEffect(() => {
     const newCartCount = basket ? basket.length : 0;
     setCartCount(newCartCount);

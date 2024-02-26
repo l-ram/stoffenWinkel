@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const OrderConfirmation = () => {
   const session = useSession();
-  const { data, error, isLoading } = useGetOrders(session?.user.id as string);
+  const { data } = useGetOrders(session?.user.id as string);
   let [countDown, setCountDown] = useState(10);
 
   const currentOrder = data?.data?.slice(-1);
