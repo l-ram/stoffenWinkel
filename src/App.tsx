@@ -11,6 +11,7 @@ import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Footer from "./pages/Navigation/Footer";
+import Favourites from "./pages/Favourites";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/account/" element={<Account />}>
             <Route index element={<Profile />} />
             <Route path="/account/orders" element={<Orders />} />
+            <Route path="/account/favourites" element={<Favourites />} />
           </Route>
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/orderConfirmation" element={<OrderConfirmation />} />

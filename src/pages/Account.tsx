@@ -20,7 +20,7 @@ const Account = () => {
             </Link>
           </li>
           <li>
-            <Link to="/favourites">
+            <Link to="/account/favourites">
               <p className="account__headers">Favourites</p>
             </Link>
           </li>

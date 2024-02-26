@@ -5,6 +5,7 @@
   -o-transition: $transition-property $transition-time $method;
   transition: $transition-property $transition-time $method;
 }
+
 * {
   box-sizing: border-box;
 }
@@ -16,7 +17,121 @@ body {
 img {
   max-width: 100%;
 }
-.cf:before,
+
+.empty {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  padding: 5rem;
+}
+
+.cart1 {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.cart1 ul {
+  width: 100%;
+}
+
+.cart1__row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.cart1__rowImage {
+  width: 25%;
+}
+
+.cart1__rowProduct {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2rem;
+  width: 25%;
+}
+
+.cart1__rowProduct input {
+  width: 25px;
+}
+
+.cart1__rowPrice {
+  width: 50px;
+}
+
+.cart1__rowButtons {
+  margin-left: auto;
+}
+
+.cartFooter {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.cartFooter__totals {
+  margin-left: auto;
+}
+
+.cartFooter__totals li {
+  padding: 1rem;
+}
+
+.cartFooter__totalsLabel {
+  margin-right: 1rem;
+}
+
+.cartFooter__totalsValue {
+}
+
+.promoCode {
+  border: 2px solid #efefef;
+  float: left;
+  width: 35%;
+  height: 10%;
+  padding: 2%;
+  label {
+    display: block;
+    width: 100%;
+    font-style: italic;
+    font-size: 1.15em;
+    margin-bottom: 0.5em;
+    letter-spacing: -0.025em;
+  }
+  input {
+    width: 85%;
+    font-size: 1em;
+    padding: 0.5em;
+    float: left;
+    border: 1px solid #dadada;
+    &:active,
+    &:focus {
+      outline: 0;
+    }
+  }
+  a.btn {
+    float: left;
+    width: 15%;
+    padding: 0.42em 0;
+    border-radius: 0 1em 1em 0;
+    text-align: center;
+    border: 1px solid var(--pinkTheme);
+    &:hover {
+      border: 1px solid var(--pinkTheme);
+      background: var(--pinkTheme);
+    }
+  }
+}
+
 .cf:after {
   content: " ";
   display: table;
@@ -24,13 +139,9 @@ img {
 .cf:after {
   clear: both;
 }
-.cf {
-  *zoom: 1;
-}
 
 .wrap {
-  width: 75%;
-  max-width: 960px;
+  width: 70%;
   margin: 0 auto;
   padding: 5% 0;
   margin-bottom: 5em;
@@ -116,7 +227,6 @@ img {
   padding: 1em 0;
 
   .items {
-    display: block;
     width: 100%;
     padding: 1.5em;
 
@@ -130,7 +240,6 @@ img {
     }
     .cartSection {
       display: table-cell;
-
       vertical-align: middle;
 
       .itemNumber {
@@ -226,44 +335,6 @@ a.remove {
   }
 }
 
-.promoCode {
-  border: 2px solid #efefef;
-  float: left;
-  width: 35%;
-  padding: 2%;
-  label {
-    display: block;
-    width: 100%;
-    font-style: italic;
-    font-size: 1.15em;
-    margin-bottom: 0.5em;
-    letter-spacing: -0.025em;
-  }
-  input {
-    width: 85%;
-    font-size: 1em;
-    padding: 0.5em;
-    float: left;
-    border: 1px solid #dadada;
-    &:active,
-    &:focus {
-      outline: 0;
-    }
-  }
-  a.btn {
-    float: left;
-    width: 15%;
-    padding: 0.75em 0;
-    border-radius: 0 1em 1em 0;
-    text-align: center;
-    border: 1px solid var(--pinkTheme);
-    &:hover {
-      border: 1px solid var(--pinkTheme);
-      background: var(--pinkTheme);
-    }
-  }
-}
-
 .btn {
   &:link,
   &:visited {
@@ -298,8 +369,9 @@ a.remove {
 
 /* TOTAL AND CHECKOUT  */
 .subtotal {
-  float: right;
-  width: 35%;
+  display: flex;
+  justify-content: end;
+  width: 50%;
   .totalRow {
     padding: 0.5em;
     text-align: right;

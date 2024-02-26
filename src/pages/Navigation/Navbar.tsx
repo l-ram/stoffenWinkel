@@ -12,6 +12,7 @@ import {
   Menu,
   Close,
   Login,
+  Home,
 } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 import Logo from "../../assets/Logo";
@@ -156,6 +157,19 @@ const Navbar = ({}: NavBar) => {
 
       <nav className="app__categories">
         <ul className="app__categories-links">
+          <li>
+            {" "}
+            <Link
+              color="#ffff"
+              to="/"
+              style={{
+                color: "none",
+              }}
+            >
+              <Home />
+            </Link>
+          </li>
+
           <li>
             {" "}
             <Link

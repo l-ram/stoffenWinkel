@@ -81,24 +81,21 @@ const CheckoutForm = () => {
         <ul>
           {basketItems?.map((b) => (
             <li key={b.product_id}>
-              <div className="infoWrap">
-                <div className="cartSection">
-                  <img
-                    height="100"
-                    src={b.image_url}
-                    alt=""
-                    className="itemImg"
-                  />
-                  <p className="itemNumber">{b.category_id}</p>
-                  <h3>
-                    {b.quantity.toString()} x {b.name}
-                  </h3>
-                </div>
+              <div className="cartSection">
+                <img
+                  height="100"
+                  src={b.image_url}
+                  alt=""
+                  className="itemImg"
+                />
+                <p className="itemNumber">{b.category_id}</p>
+                <h3 className="cartSection__quantity">
+                  {b.quantity.toString()} x {b.name}
+                </h3>
 
-                <div className="prodTotal cartSection">
+                <div className="cartSection__cost">
                   <p>€ {(b.price * b.quantity).toFixed(2)}</p>
                 </div>
-                <div className="cartSection removeWrap"></div>
               </div>
             </li>
           ))}

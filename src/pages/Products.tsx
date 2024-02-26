@@ -2,19 +2,19 @@ import "../pages/products.scss";
 import { addToBasket } from "../db/db_apis";
 import { useGetProducts } from "../db/db_apis";
 import { CircularProgress } from "@mui/material/";
-import { Favorite, FavoriteBorderOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import CategorySelector from "../components/CategorySelector";
 import SortingSelector from "../components/SortingSelector";
+import { useSession } from "../context/SessionContext";
 
 const Products = () => {
+  const session = useSession();
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(25);
   const [isFiltered, setFilter] = useState<boolean>(false);
   const [isSorted, setSorting] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const categories = ["All", "Fabric", "Wool", "Needles"];
-  const [heart, setHeart] = useState<string>("disabled");
 
   // Products hook
   const {
@@ -107,7 +107,10 @@ const Products = () => {
                   <button
                     className="card__price"
                     onClick={() => {
-                      addToBasket(product.product_id);
+                      addToBasket(
+                        product.product_id,
+                        session?.user.id as string
+                      );
                     }}
                   >
                     Add to basket

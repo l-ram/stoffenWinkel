@@ -5,16 +5,9 @@ import "../pages/basket.scss";
 import { useCartItems } from "../db/db_apis";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
-import {
-  Delete,
-  Remove,
-  Add,
-  Shop,
-  Shop2,
-  ShoppingCart,
-} from "@mui/icons-material";
+import { Delete, Remove, Add, ShoppingCart } from "@mui/icons-material";
 import { useState } from "react";
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 
 const Basket = () => {
   const session = useSession();
@@ -104,9 +97,20 @@ const Basket = () => {
       {isError && <p>{error.message}</p>}
       {basketError && <h3>{basketError}</h3>}
 
-      {basketItems && basketItems.length < 1 && <p>Basket is empty</p>}
+      {!session || (basketItems && basketItems?.length < 1) ? (
+        <div className="empty">
+          <h2>Basket is empty</h2>
+        </div>
+      ) : null}
 
-      <div className="cart">
+      {(basketItems && basketItems.length < 1) ||
+        (!session && (
+          <div className="empty">
+            <h2>Basket is empty</h2>
+          </div>
+        ))}
+
+      {/* <div className="cart">
         <ul className="cartWrap">
           {basketItems?.map((b) => (
             <li className="items odd" key={b.product_id}>
@@ -131,20 +135,80 @@ const Basket = () => {
                   <p>{`€${(b.price * b.quantity).toFixed(2)}`}</p>
                 </div>
                 <div className="cartSection removeWrap">
-                  <Add
-                    className="increment"
-                    onClick={() => handleIncrement(b.product_id)}
-                  />
-                  {b.quantity >= 2 ? (
-                    <Remove
-                      className="decrement"
-                      onClick={() => handleDecrement(b.product_id)}
+                  <IconButton>
+                    <Add
+                      className="increment"
+                      onClick={() => handleIncrement(b.product_id)}
                     />
-                  ) : null}
-                  <Delete
-                    className="remove"
-                    onClick={() => handleRemoveItem(b.product_id)}
-                  />
+                  </IconButton>
+                  <IconButton>
+                    {b.quantity >= 2 ? (
+                      <Remove
+                        className="decrement"
+                        onClick={() => handleDecrement(b.product_id)}
+                      />
+                    ) : null}
+                  </IconButton>
+                  <IconButton>
+                    <Delete
+                      className="remove"
+                      onClick={() => handleRemoveItem(b.product_id)}
+                    />
+                  </IconButton>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div> */}
+
+      <div className="cart1">
+        <ul>
+          {basketItems?.map((b) => (
+            <li>
+              <div className="cart1__row">
+                <div className="cart1__rowImage">
+                  <img src={b.image_url} alt="" />
+                </div>
+                <div className="cart1__rowProduct">
+                  <p className="cart1__productNumber">{b.category_id}</p>
+                  <h3>{b.name}</h3>
+                  <p>
+                    {" "}
+                    <input
+                      type="text"
+                      className="cart1__productQuantity"
+                      placeholder={b.quantity.toString()}
+                    />{" "}
+                    x €{b.price}
+                  </p>
+                </div>
+
+                <div className="">
+                  <p>{`€${(b.price * b.quantity).toFixed(2)}`}</p>
+                </div>
+
+                <div className="cart1__rowButtons">
+                  <IconButton>
+                    <Add
+                      className="increment"
+                      onClick={() => handleIncrement(b.product_id)}
+                    />
+                  </IconButton>
+                  <IconButton>
+                    {b.quantity >= 2 ? (
+                      <Remove
+                        className="decrement"
+                        onClick={() => handleDecrement(b.product_id)}
+                      />
+                    ) : null}
+                  </IconButton>
+                  <IconButton>
+                    <Delete
+                      className="remove"
+                      onClick={() => handleRemoveItem(b.product_id)}
+                    />
+                  </IconButton>
                 </div>
               </div>
             </li>
@@ -152,41 +216,49 @@ const Basket = () => {
         </ul>
       </div>
 
-      <div className="promoCode">
-        <label form="promo">Have A Promo Code?</label>
-        <input type="text" name="promo" placeholder="Enter Code" />
-        <a href="#" className="btn"></a>
-      </div>
+      <div className="cartFooter">
+        <div className="promoCode">
+          <label form="promo">Have A Promo Code?</label>
+          <input type="text" name="promo" placeholder="Enter Code" />
+          <a href="#" className="btn"></a>
+        </div>
 
-      <div className="subtotal cf">
-        <ul>
-          <li className="totalRow">
-            <span className="label">Subtotal</span>
-            <span className="value">€{basketTotal.toFixed(2)}</span>
-          </li>
+        <div className="cartFooter__totals">
+          <ul>
+            <li>
+              <span className="cartFooter__totalsLabel">Subtotal</span>
+              <span className="cartFooter__totalsValue">
+                €{basketTotal.toFixed(2)}
+              </span>
+            </li>
 
-          <li className="totalRow">
-            <span className="label">Shipping</span>
-            <span className="value">{`€${shipping}`}</span>
-          </li>
+            <li>
+              <span className="cartFooter__totalsLabel">Shipping</span>
+              <span className="cartFooter__totalsValue">{`€${shipping}`}</span>
+            </li>
 
-          <li className="totalRow final">
-            <span className="label">Total</span>
-            <span className="value">
-              €{(basketTotal + shipping).toFixed(2)}
-            </span>
-          </li>
+            <li>
+              <span className="cartFooter__totalsLabel">Total</span>
+              <span className="cartFooter__totalsValue">
+                €{(basketTotal + shipping).toFixed(2)}
+              </span>
+            </li>
 
-          <Button
-            disabled={(basketItems?.length as number) > 0 ? false : true}
-            onClick={handleGoToCheckout}
-            variant="contained"
-            color="success"
-            startIcon={<ShoppingCart />}
-          >
-            Checkout
-          </Button>
-        </ul>
+            <li>
+              <span>
+                <Button
+                  disabled={(basketItems?.length as number) > 0 ? false : true}
+                  onClick={handleGoToCheckout}
+                  variant="contained"
+                  color="success"
+                  startIcon={<ShoppingCart />}
+                >
+                  Checkout
+                </Button>
+              </span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );

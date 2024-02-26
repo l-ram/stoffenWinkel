@@ -12,6 +12,14 @@
   padding: 1rem;
 }
 
+.sorting button {
+  margin: 0 10px 0 10px;
+  padding: 5px;
+  border-radius: 5px;
+  border-style: none;
+  cursor: pointer;
+}
+
 .products {
   display: grid;
   grid-template-columns: 1fr repeat(12, minmax(auto, 60px)) 1fr;
@@ -96,6 +104,14 @@
   display: flex;
   justify-content: center;
   padding: 2rem;
+}
+
+.pagesBottom button {
+  margin: 0 10px 0 10px;
+  padding: 5px;
+  border-radius: 5px;
+  border-style: none;
+  cursor: pointer;
 }
 
 @media only screen and (max-width: 1000px) {
