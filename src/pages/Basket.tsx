@@ -103,13 +103,6 @@ const Basket = () => {
         </div>
       ) : null}
 
-      {(basketItems && basketItems.length < 1) ||
-        (!session && (
-          <div className="empty">
-            <h2>Basket is empty</h2>
-          </div>
-        ))}
-
       {/* <div className="cart">
         <ul className="cartWrap">
           {basketItems?.map((b) => (
