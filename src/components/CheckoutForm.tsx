@@ -2,7 +2,7 @@ import { useCartItems } from "../db/db_apis";
 import "../components/checkoutform.scss";
 import { FormEvent, useEffect, useState } from "react";
 import { CheckoutData } from "../types/types";
-import { createOrder } from "../db/db_apis";
+import { checkUser, createOrder } from "../db/db_apis";
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "../context/SessionContext";
@@ -48,12 +48,15 @@ const CheckoutForm = () => {
     },
   });
 
-  console.log(mutation);
+  console.log("mutation:", mutation);
 
-  const handleCheckoutFormSubmit = (event: FormEvent) => {
+  const handleCheckoutFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    mutation.mutate(checkoutData);
-    navigate("/orderConfirmation");
+    console.log(checkoutData);
+    const correctUserData = await checkUser(checkoutData);
+    correctUserData
+      ? alert("Please update your account details before making an order")
+      : (await mutation.mutate(checkoutData), navigate("/orderConfirmation"));
   };
 
   const handleCheckoutChange = (

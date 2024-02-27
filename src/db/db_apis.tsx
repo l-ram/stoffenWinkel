@@ -100,26 +100,34 @@ export const useGetOrders = (userId: string) => {
   });
 };
 
-export const createOrder = async (checkout: CheckoutData) => {
-  console.log("does create order func run?");
-
-  const { data: user, error } = await supabase
+export const checkUser = async (checkout: CheckoutData) => {
+  const { data: user } = await supabase
     .from("users")
     .select("*")
     .eq("user_id", checkout.user);
-  if (error) {
-    return alert(error.message);
-  }
 
-  console.log("user:", user);
+  if (user) {
+    const hasNullOrEmpty = Object.values(user[0]).some((value, index) => {
+      const isEmpty = value == null || String(value).trim() === "";
+      console.log(`Value at index ${index}: "${value}", Is Empty: ${isEmpty}`);
+      return isEmpty;
+    });
+    return hasNullOrEmpty;
+  }
+  return user;
+};
+
+export const createOrder = async (checkout: CheckoutData) => {
+  const { data: user } = await supabase
+    .from("users")
+    .select("*")
+    .eq("user_id", checkout.user);
 
   const { data: basketItems, error: basketError } = await supabase
     .from("basket")
     .select("*")
     .eq("user_id", checkout.user);
   if (basketError) throw new Error(basketError.message);
-
-  console.log("basket items:", basketItems);
 
   const { data: newOrder, error: orderError } = await supabase
     .from("orders")
@@ -138,6 +146,8 @@ export const createOrder = async (checkout: CheckoutData) => {
     alert(orderError.message);
     throw new Error(orderError.message);
   }
+
+  console.log("New order:", newOrder, "Error:", orderError);
 
   const orderLines = basketItems.map((item) => ({
     order_id: newOrder[0].order_id,
