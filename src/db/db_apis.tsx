@@ -10,7 +10,8 @@ export const addToBasket = async (product_id: number, user_id: string) => {
     const { data: existingProduct, error } = await supabase
       .from("basket")
       .select("*")
-      .eq("product_id", product_id);
+      .eq("product_id", product_id)
+      .eq("user_id", user_id);
 
     if (error) {
       alert("Please login or register to add products to the basket");
@@ -23,7 +24,8 @@ export const addToBasket = async (product_id: number, user_id: string) => {
       await supabase
         .from("basket")
         .update({ quantity: existingProduct[0].quantity + 1 })
-        .eq("product_id", product_id);
+        .eq("product_id", product_id)
+        .eq("user_id", user_id);
     } else {
       console.log("product doesnt exist");
       const { data: catalog, error } = await supabase
@@ -42,6 +44,7 @@ export const addToBasket = async (product_id: number, user_id: string) => {
         const { data, error } = await supabase
           .from("basket")
           .insert({
+            user_id: user_id,
             product_id: catalog[0].product_id,
             image_url: catalog[0].image_url as string,
             quantity: 1,
