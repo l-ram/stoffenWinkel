@@ -9,8 +9,9 @@ import {
   Typography,
 } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
-import React from "react";
+import React, { useEffect } from "react";
 import "./homepage.scss";
+import ReactGA from "react-ga4";
 
 interface MediaProps {
   loading?: boolean;
@@ -103,6 +104,11 @@ function Media(props: MediaProps) {
 }
 
 const Home = () => {
+  useEffect(() => {
+    ReactGA.set({ page: window.location.href + window.location.search });
+    console.log("ga ran");
+  }, [window.location.href]);
+
   return (
     <div className="homepage">
       <p>Welcome to De Stoffen Winkel</p>

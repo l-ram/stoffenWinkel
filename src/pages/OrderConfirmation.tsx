@@ -2,8 +2,13 @@ import { useEffect, useState } from "react";
 import { useSession } from "../context/SessionContext";
 import { useGetOrders } from "../db/db_apis";
 import { useNavigate } from "react-router-dom";
+import ReactGA from "react-ga4";
 
 const OrderConfirmation = () => {
+  useEffect(() => {
+    ReactGA.set({ page: window.location.href + window.location.search });
+    console.log("ga ran");
+  }, [window.location.href]);
   const session = useSession();
   const { data } = useGetOrders(session?.user.id as string);
   let [countDown, setCountDown] = useState(10);

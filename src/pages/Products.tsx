@@ -2,12 +2,17 @@ import "../pages/products.scss";
 import { addToBasket } from "../db/db_apis";
 import { useGetProducts } from "../db/db_apis";
 import { CircularProgress } from "@mui/material/";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CategorySelector from "../components/CategorySelector";
 import SortingSelector from "../components/SortingSelector";
 import { useSession } from "../context/SessionContext";
+import ReactGA from "react-ga4";
 
 const Products = () => {
+  useEffect(() => {
+    ReactGA.set({ page: window.location.href + window.location.search });
+    console.log("ga ran");
+  }, [window.location.href]);
   const session = useSession();
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(25);

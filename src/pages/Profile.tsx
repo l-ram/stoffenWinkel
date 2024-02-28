@@ -1,8 +1,9 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { supabase } from "../config/supabase.config";
 import { useSession } from "../context/SessionContext";
 import CircularProgress from "@mui/material/CircularProgress";
 import "./profile.scss";
+import ReactGA from "react-ga4";
 
 interface usersDB {
   first_name: string;
@@ -14,6 +15,11 @@ interface usersDB {
 }
 
 const Profile = () => {
+  useEffect(() => {
+    ReactGA.set({ page: window.location.href + window.location.search });
+    console.log("ga ran");
+  }, [window.location.href]);
+
   const session = useSession();
   const [success, setSuccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);

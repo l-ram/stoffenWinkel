@@ -2,8 +2,14 @@ import { useSession } from "../context/SessionContext";
 import { useGetOrders } from "../db/db_apis";
 import { CircularProgress } from "@mui/material/";
 import "./orders.scss";
+import ReactGA from "react-ga4";
+import { useEffect } from "react";
 
 const Orders = () => {
+  useEffect(() => {
+    ReactGA.set({ page: window.location.href + window.location.search });
+    console.log("ga ran");
+  }, [window.location.href]);
   const session = useSession();
   const { data, error, isLoading, isError } = useGetOrders(
     session?.user.id as string

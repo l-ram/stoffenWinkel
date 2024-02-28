@@ -18,10 +18,9 @@ ReactGA.initialize("G-C75192SJDV");
 
 const App = () => {
   useEffect(() => {
-    ReactGA.set({ page: location.pathname + location.search });
+    ReactGA.set({ page: window.location.href + window.location.search });
     console.log("ga ran");
-  }, []);
-
+  }, [window.location.href]);
   return (
     <>
       <Navbar />

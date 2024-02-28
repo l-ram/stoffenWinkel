@@ -1,7 +1,14 @@
 import { Link, Outlet } from "react-router-dom";
 import "./account.scss";
+import ReactGA from "react-ga4";
+import { useEffect } from "react";
 
 const Account = () => {
+  useEffect(() => {
+    ReactGA.set({ page: window.location.href + window.location.search });
+    console.log("ga ran");
+  }, [window.location.href]);
+
   return (
     <div className="account">
       <nav className="account__sideBar">

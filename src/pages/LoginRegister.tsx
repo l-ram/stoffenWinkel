@@ -1,10 +1,17 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { supabase } from "../config/supabase.config";
 import { useNavigate } from "react-router-dom";
 import "./loginRegister.scss";
+import ReactGA from "react-ga4";
+
 interface LoginRegister {}
 
 const LoginRegister = ({}: LoginRegister) => {
+  useEffect(() => {
+    ReactGA.set({ page: window.location.href + window.location.search });
+    console.log("ga ran");
+  }, [window.location.href]);
+
   let navigate = useNavigate();
 
   const [error, setError] = useState<string>();

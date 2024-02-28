@@ -6,10 +6,16 @@ import { useCartItems } from "../db/db_apis";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Delete, Remove, Add, ShoppingCart } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, IconButton } from "@mui/material";
+import ReactGA from "react-ga4";
 
 const Basket = () => {
+  useEffect(() => {
+    ReactGA.set({ page: window.location.href + window.location.search });
+    console.log("ga ran");
+  }, [window.location.href]);
+
   const session = useSession();
   const [basketError, setBasketError] = useState<string>();
 
@@ -102,58 +108,6 @@ const Basket = () => {
           <h2>Basket is empty</h2>
         </div>
       ) : null}
-
-      {/* <div className="cart">
-        <ul className="cartWrap">
-          {basketItems?.map((b) => (
-            <li className="items odd" key={b.product_id}>
-              <div className="infoWrap">
-                <div className="cartSection">
-                  <img src={b.image_url} alt="" className="itemImg" />
-                  <p className="itemNumber">{b.category_id}</p>
-                  <h3>{b.name}</h3>
-
-                  <p>
-                    {" "}
-                    <input
-                      type="text"
-                      className="qty"
-                      placeholder={b.quantity.toString()}
-                    />{" "}
-                    x €{b.price}
-                  </p>
-                </div>
-
-                <div className="prodTotal cartSection">
-                  <p>{`€${(b.price * b.quantity).toFixed(2)}`}</p>
-                </div>
-                <div className="cartSection removeWrap">
-                  <IconButton>
-                    <Add
-                      className="increment"
-                      onClick={() => handleIncrement(b.product_id)}
-                    />
-                  </IconButton>
-                  <IconButton>
-                    {b.quantity >= 2 ? (
-                      <Remove
-                        className="decrement"
-                        onClick={() => handleDecrement(b.product_id)}
-                      />
-                    ) : null}
-                  </IconButton>
-                  <IconButton>
-                    <Delete
-                      className="remove"
-                      onClick={() => handleRemoveItem(b.product_id)}
-                    />
-                  </IconButton>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div> */}
 
       <div className="cart1">
         <ul>
