@@ -12,6 +12,8 @@ import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Footer from "./pages/Navigation/Footer";
 import Favourites from "./pages/Favourites";
+import ReactGA from "react-ga4";
+ReactGA.initialize("7581022374");
 
 const App = () => {
   return (

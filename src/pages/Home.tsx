@@ -102,6 +102,44 @@ function Media(props: MediaProps) {
   );
 }
 
+const data = [
+  {
+    id: "819da04c-5279-41b5-b305-79da2b6de082",
+    period_start: "2024-02-21",
+    total_auth_post_requests: 6,
+  },
+  {
+    id: "94f90626-2fcc-4d45-9250-45e035e2e997",
+    period_start: "2024-02-22",
+    total_auth_post_requests: 27,
+  },
+  {
+    id: "0a6976b1-2add-427b-932e-98c34eb85a58",
+    period_start: "2024-02-23",
+    total_auth_post_requests: 9,
+  },
+  {
+    id: "3e6f326d-104f-47f5-a5a9-dbad9235c885",
+    period_start: "2024-02-24",
+    total_auth_post_requests: 6,
+  },
+  {
+    id: "1933f781-1864-4163-b6be-bce8c53258a5",
+    period_start: "2024-02-25",
+    total_auth_post_requests: 5,
+  },
+  {
+    id: "6ce818b3-b416-499c-8ed1-78964be0f82a",
+    period_start: "2024-02-26",
+    total_auth_post_requests: 20,
+  },
+  {
+    id: "12b8d45a-ff5f-40dc-94ee-2a8c8fd99c21",
+    period_start: "2024-02-27",
+    total_auth_post_requests: 35,
+  },
+];
+
 const Home = () => {
   return (
     <div className="homepage">
