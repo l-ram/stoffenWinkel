@@ -13,9 +13,14 @@ import OrderConfirmation from "./pages/OrderConfirmation";
 import Footer from "./pages/Navigation/Footer";
 import Favourites from "./pages/Favourites";
 import ReactGA from "react-ga4";
-ReactGA.initialize("7581022374");
+import { useEffect } from "react";
+ReactGA.initialize("G-C75192SJDV");
 
 const App = () => {
+  useEffect(() => {
+    ReactGA.set({ page: location.pathname + location.search });
+  }, []);
+
   return (
     <>
       <Navbar />

@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import { supabase } from "../config/supabase.config";
 import { useSession } from "../context/SessionContext";
 import CircularProgress from "@mui/material/CircularProgress";
+import ReactGa from "react-ga4";
 import "./profile.scss";
 
 interface usersDB {
@@ -14,6 +15,15 @@ interface usersDB {
 }
 
 const Profile = () => {
+  const pageViewTracking = (props) => {
+    const pathName = props.match.path;
+
+    let pageView;
+    if (pathName === "*") pageView = "/not-found";
+    else pageView = pathName;
+    ReactGa.pageView(pageView);
+  };
+
   const session = useSession();
   const [success, setSuccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
