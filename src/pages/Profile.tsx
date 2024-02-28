@@ -15,15 +15,6 @@ interface usersDB {
 }
 
 const Profile = () => {
-  const pageViewTracking = (props) => {
-    const pathName = props.match.path;
-
-    let pageView;
-    if (pathName === "*") pageView = "/not-found";
-    else pageView = pathName;
-    ReactGa.pageView(pageView);
-  };
-
   const session = useSession();
   const [success, setSuccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
