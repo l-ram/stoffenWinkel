@@ -19,6 +19,7 @@ ReactGA.initialize("G-C75192SJDV");
 const App = () => {
   useEffect(() => {
     ReactGA.set({ page: location.pathname + location.search });
+    console.log("ga ran");
   }, []);
 
   return (

@@ -2,7 +2,6 @@ import { FormEvent, useState } from "react";
 import { supabase } from "../config/supabase.config";
 import { useSession } from "../context/SessionContext";
 import CircularProgress from "@mui/material/CircularProgress";
-import ReactGa from "react-ga4";
 import "./profile.scss";
 
 interface usersDB {
