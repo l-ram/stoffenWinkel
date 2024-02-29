@@ -11,7 +11,7 @@ interface usersDB {
   birth_date: string;
   shipping_address: string;
   country: string;
-  payment_type: string;
+  payment_type: string | null;
 }
 
 const Profile = () => {
@@ -31,8 +31,10 @@ const Profile = () => {
     birth_date: "",
     shipping_address: "",
     country: "",
-    payment_type: "",
+    payment_type: "0",
   });
+
+  console.log(profileForm.payment_type);
 
   const handleUploadAvatar = async (event: any) => {
     const avatarFile = event.target.files[0];
@@ -61,6 +63,10 @@ const Profile = () => {
   };
 
   const handleProfileUpdate = async (event: FormEvent) => {
+    if (profileForm.payment_type === "0") {
+      return alert("Please choose a payment method");
+    }
+
     event.preventDefault();
     const { data } = await supabase
       .from("users")
@@ -162,10 +168,14 @@ const Profile = () => {
           onChange={handleOnChange}
         />
         <h3>Update your preferred payment method</h3>
-        <select name="payment_type" onChange={handleOnChange}>
-          <option>Paypal</option>
-          <option>Bancontact</option>
-          <option>Visa</option>
+        <select name="payment_type" required={true} onChange={handleOnChange}>
+          <option selected value="0">
+            Please select a payment method
+          </option>
+
+          <option value="Paypal">Paypal</option>
+          <option value="Bancontact">Bancontact</option>
+          <option value="Visa">Visa</option>
         </select>
         <br></br>
         <br></br>
