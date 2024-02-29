@@ -132,41 +132,43 @@ export const createOrder = async (checkout: CheckoutData) => {
     .eq("user_id", checkout.user);
   if (basketError) throw new Error(basketError.message);
 
-  const { data: newOrder, error: orderError } = await supabase
-    .from("orders")
-    .upsert([
-      {
-        user_id: checkout.user,
-        shipping_address: user[0].shipping_address as string,
-        payment_type: checkout.paymentType as string,
-        order_total: checkout.total as number,
-      },
-    ])
-    .select("*")
-    .returns<Database["public"]["Tables"]["orders"]["Row"][]>();
-  console.log("New order:", newOrder);
-  if (orderError) {
-    alert(orderError.message);
-    throw new Error(orderError.message);
+  if (user !== null) {
+    const { data: newOrder, error: orderError } = await supabase
+      .from("orders")
+      .upsert([
+        {
+          user_id: checkout.user,
+          shipping_address: user[0].shipping_address as string,
+          payment_type: checkout.paymentType as string,
+          order_total: checkout.total as number,
+        },
+      ])
+      .select("*")
+      .returns<Database["public"]["Tables"]["orders"]["Row"][]>();
+    console.log("New order:", newOrder);
+    if (orderError) {
+      alert(orderError.message);
+      throw new Error(orderError.message);
+    }
+
+    console.log("New order:", newOrder, "Error:", orderError);
+
+    const orderLines = basketItems.map((item) => ({
+      order_id: newOrder[0].order_id,
+      product_id: item.product_id,
+      quantity: item.quantity,
+      cost: item.price * item.quantity,
+      price: item.price,
+    }));
+
+    console.log("Order lines table! :", orderLines);
+
+    await supabase.from("order_line").insert(orderLines);
+
+    await supabase.from("basket").delete().eq("user_id", checkout.user);
+
+    return newOrder;
   }
-
-  console.log("New order:", newOrder, "Error:", orderError);
-
-  const orderLines = basketItems.map((item) => ({
-    order_id: newOrder[0].order_id,
-    product_id: item.product_id,
-    quantity: item.quantity,
-    cost: item.price * item.quantity,
-    price: item.price,
-  }));
-
-  console.log("Order lines table! :", orderLines);
-
-  await supabase.from("order_line").insert(orderLines);
-
-  await supabase.from("basket").delete().eq("user_id", checkout.user);
-
-  return newOrder;
 };
 
 export const useGetProducts = (
