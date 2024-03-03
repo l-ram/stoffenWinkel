@@ -8,6 +8,7 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
+import { OneDPacking } from "../hooks/OneDPacking";
 import { MoreVert } from "@mui/icons-material";
 import React, { useEffect } from "react";
 import "./homepage.scss";
@@ -108,6 +109,11 @@ const Home = () => {
     ReactGA.set({ page: window.location.href + window.location.search });
     console.log("ga ran");
   }, [window.location.href]);
+
+  const weights = [20, 50, 40, 70, 10, 30, 80];
+  const container = 100;
+
+  OneDPacking(weights, container);
 
   return (
     <div className="homepage">
