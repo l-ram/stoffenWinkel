@@ -12,6 +12,7 @@ import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Footer from "./pages/Navigation/Footer";
 import Favourites from "./pages/Favourites";
+import ProductPageCutting from "./pages/ProductPageCutting";
 import ReactGA from "react-ga4";
 import { useEffect } from "react";
 ReactGA.initialize("G-C75192SJDV");
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/" element={<Outlet />}>
           <Route index element={<Home />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/productPage" element={<ProductPageCutting />} />
           <Route path="/basket" element={<Basket />} />
           <Route path="/loginRegister" element={<LoginRegister />} />
           <Route path="/account/" element={<Account />}>

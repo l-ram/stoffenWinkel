@@ -8,7 +8,7 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
-import { OneDPacking } from "../hooks/OneDPacking";
+import { UseOneDPacking } from "../hooks/UseOneDPacking";
 import { MoreVert } from "@mui/icons-material";
 import React, { useEffect } from "react";
 import "./homepage.scss";
@@ -110,10 +110,36 @@ const Home = () => {
     console.log("ga ran");
   }, [window.location.href]);
 
-  const weights = [20, 50, 40, 70, 10, 30, 80];
+  const userCuts = [
+    {
+      id: 1,
+      length: 10,
+      count: 5,
+    },
+    {
+      id: 2,
+      length: 25,
+      count: 1,
+    },
+    {
+      id: 3,
+      length: 50,
+      count: 1,
+    },
+    {
+      id: 4,
+      length: 30,
+      count: 3,
+    },
+    {
+      id: 5,
+      length: 5,
+      count: 7,
+    },
+  ];
   const container = 100;
 
-  OneDPacking(weights, container);
+  UseOneDPacking({ userCuts, container });
 
   return (
     <div className="homepage">

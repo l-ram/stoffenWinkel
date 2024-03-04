@@ -4,8 +4,6 @@ export const OneDPacking = (weights: number[], container: number) => {
   const sortedWeights = weights.sort((a, b) => b - a);
   const amount = sortedWeights.length;
 
-  console.log(sortedWeights, amount);
-
   // We sort the weight size decreasing and get the amount of weights
 
   // The amount of bins and an array that has an entry for each weight, starting with 0
@@ -15,7 +13,7 @@ export const OneDPacking = (weights: number[], container: number) => {
   // The main loop, looks through the weights
   for (let i = 0; i < amount; i++) {
     // J is our variable to track the bins
-    // Miniumum space tells us how much space is in each bin
+    // Minimum space tells us how much space is in each bin
     // binIndex tells us where there is a bin with enough for our weight
     let j;
     let minimumSpace = container + 1;
@@ -26,7 +24,7 @@ export const OneDPacking = (weights: number[], container: number) => {
       // Loop lasts as long as there is results (amount of bins)
       // At first there are no bins (j is 0, results is 0), so nothing will happen with this loop at first
       if (
-        // The first time there is a bin will look at the value and it will be at first posiiton: 0 ( so j = 0m result is 1)
+        // The first time there is a bin will look at the value and it will be at first posiiton: 0 ( so j = 0, result is 1)
         bin_remaining[j] >= sortedWeights[i] &&
         // If the remaining space is bigger than or equal to the current weight
         bin_remaining[j] - sortedWeights[i] < minimumSpace
