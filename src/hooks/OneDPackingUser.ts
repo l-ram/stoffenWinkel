@@ -11,16 +11,19 @@ export const OneDPackingUser = (userCuts: UserCuts[], container: number) => {
   const bins: Bin[] = [];
   const cutIds: number[] = [];
 
-  for (let i = 0; i < sortedCuts.length; i++) {
-    let placed = false;
+  console.log("all user cuts sorted:", sortedCuts);
 
-    for (let j = 0; j < sortedCuts[i].count; j++) {
+  for (let i = 0; i < sortedCuts.length; i++) {
+    const cut = sortedCuts[i];
+    const totalIndividualCuts = cut.count;
+
+    for (let j = 0; j < totalIndividualCuts; j++) {
       let placed = false;
 
       for (let k = 0; k < bins.length; k++) {
         const remainingSpace = bins[k].remainingSpace;
-        if (remainingSpace >= sortedCuts[i].length) {
-          bins[k].remainingSpace -= sortedCuts[i].length;
+        if (remainingSpace >= cut.length) {
+          bins[k].remainingSpace -= cut.length;
 
           cutIds.push(bins[k].id);
           placed = true;
@@ -29,7 +32,7 @@ export const OneDPackingUser = (userCuts: UserCuts[], container: number) => {
       }
 
       if (!placed) {
-        const remainingSpace = container - sortedCuts[i].length;
+        const remainingSpace = container - cut.length;
 
         if (remainingSpace >= 0) {
           const newBin: Bin = {
