@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { Bin, UserCuts } from "../types/types";
+import { Bin, BinResult, UserCuts } from "../types/types";
 import { OneDPackingUser } from "../hooks/OneDPackingUser";
+import { Button, Input, FormControl } from "@mui/material";
 
 const ProductPageCutting = () => {
   const [cuts, setCuts] = useState<UserCuts[]>([
@@ -30,11 +31,10 @@ const ProductPageCutting = () => {
       count: 7,
     },
   ]);
-  const [bins, setBins] = useState<{ bins: Bin[]; cutIds: number[] }>({
-    bins: [],
-    cutIds: [],
-  });
+  const [bins, setBins] = useState<BinResult>({});
   const containerCapacity = 100;
+
+  console.log(bins);
 
   useEffect(() => {
     console.log("Current state of cuts:", cuts);
@@ -42,57 +42,31 @@ const ProductPageCutting = () => {
     setBins(result);
   }, [cuts]);
 
-  console.log("Current state of cuts after algo:", cuts);
+  console.log(bins);
 
-  const color = [
-    "#ff1ca0",
-    "#ff1bb1",
-    "#ff1ac1",
-    "#ff19c1",
-    "#ff18d1",
-    "#ff17e1",
-    "#ff16f1",
-    "#ff15f1",
-    "#ff1501",
-    "#ff1411",
-    "#ff1321",
-    "#ff1221",
-    "#ff1131",
-    "#ff1041",
-    "#fff5f9",
-    "#ffe5f0",
-    "#ffd6e6",
-    "#ffc7dd",
-    "#feb8d4",
-    "#fea9cb",
-    "#fda1c6",
-    "#fc9ac1",
-    "#fa92bc",
-    "#f88bb7",
-    "#f684b2",
-    "#f47dad",
-    "#f177a8",
-    "#ef70a3",
-    "#ec6a9e",
-    "#e96499",
-    "#e65e95",
-    "#e25990",
-    "#de548b",
-    "#db4e86",
-    "#d64982",
-    "#d2457d",
-    "#ce4079",
-    "#c93c74",
-    "#c23a70",
-    "#b93a6d",
-  ];
-
-  console.log("Current state of cuts after color:", cuts);
+  const colourIdMapping: Record<number, string> = {
+    1: "#ff9ccc",
+    2: "#ff5ee2",
+    3: "#f783ff",
+    4: "#7c62b9",
+    5: "#8f8dff",
+    6: "#8ac3ff",
+    7: "#90fdff",
+    8: "#88fff1",
+    9: "#85ffa9",
+  };
 
   return (
     <div>
+      <div className="user-input">
+        <Form>
+          <Input></Input> <Input></Input>
+          <Button variant={"outlined"}>Add cut</Button>
+        </Form>
+      </div>
+
       <div
-        className="container"
+        className="cuts-container"
         style={{
           borderRadius: "10px",
           display: "flex",
@@ -102,61 +76,47 @@ const ProductPageCutting = () => {
           flexDirection: "column",
           width: "75%",
           padding: "1rem",
-          backgroundColor: "lightgrey",
+          backgroundColor: "whitesmoke",
+          margin: "1rem",
         }}
       >
-        {bins.bins.map((bin, binIdx) => {
-          console.log("Current bin:", bin);
+        {Object.keys(bins).map((binId) => {
+          const bin = bins[binId];
           return (
             <div
-              key={binIdx}
+              key={binId}
               style={{
                 display: "flex",
                 flexDirection: "row",
                 width: `${containerCapacity}px`,
-                backgroundColor: "blue",
+                backgroundColor: "lightgrey",
                 height: "40px",
                 margin: "0.5rem",
               }}
             >
-              {bin.remainingSpace >= 0 &&
-                bin.remainingSpace < containerCapacity &&
-                bin.remainingSpace !== containerCapacity &&
-                bins.cutIds.map((cutId, cutIdx) => {
-                  console.log("Cut ID and Bin ID:", cutId, bin.id);
-                  console.log("Cut information:", cuts[cutIdx]);
-                  console.log("Colour information:", color[cutIdx]);
+              {bin.cutIds.map((cutId, cutIdx) => {
+                const cut = cuts.find((cut) => cut.id === cutId);
+                const color = colourIdMapping[cutId];
+                console.log(cut);
+                if (cut) {
                   return (
-                    cutId === bin.id && (
-                      <div
-                        key={cutIdx}
-                        style={{
-                          width: cuts[cutId - 1]
-                            ? `${cuts[cutId - 1]?.length}px`
-                            : "1px",
-                          backgroundColor: `${color[cutId - 1]}`,
-                          color: "black",
-                          borderStyle: "solid",
-                          borderColor: "black",
-                          borderWidth: "0.5px",
-                        }}
-                      ></div>
-                    )
+                    <div
+                      key={cutIdx}
+                      style={{
+                        borderStyle: "solid",
+                        borderWidth: "0.1px",
+                        borderColor: "lightgray",
+                        width: `${cut.length}px`,
+                        backgroundColor: `${color}`,
+                      }}
+                    />
                   );
-                })}
+                }
+              })}
             </div>
           );
         })}
       </div>
-
-      {/* Display current cuts and their bin IDs */}
-      <ul>
-        {cuts.map((cut, cutIndex) => (
-          <li key={cutIndex}>
-            {cut.length} (x{cut.count}) - Bin {bins.cutIds[cutIndex]}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 };

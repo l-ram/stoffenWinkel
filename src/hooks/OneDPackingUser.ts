@@ -1,17 +1,14 @@
-import { Bin, UserCuts } from "../types/types";
+import { Bin, BinResult, UserCuts } from "../types/types";
 
 export const OneDPackingUser = (userCuts: UserCuts[], container: number) => {
   // We accept weights, and container size
 
-  const individualCuts = userCuts.flatMap((cut) =>
-    Array.from({ length: cut.count }, () => ({ ...cut }))
-  );
+  // const individualCuts = userCuts.flatMap((cut) =>
+  //   Array.from({ length: cut.count }, () => ({ ...cut }))
+  // );
 
   const sortedCuts = userCuts.sort((a, b) => b.length - a.length);
-  const bins: Bin[] = [];
-  const cutIds: number[] = [];
-
-  console.log("all user cuts sorted:", sortedCuts);
+  const binResult: BinResult = {};
 
   for (let i = 0; i < sortedCuts.length; i++) {
     const cut = sortedCuts[i];
@@ -20,12 +17,11 @@ export const OneDPackingUser = (userCuts: UserCuts[], container: number) => {
     for (let j = 0; j < totalIndividualCuts; j++) {
       let placed = false;
 
-      for (let k = 0; k < bins.length; k++) {
-        const remainingSpace = bins[k].remainingSpace;
+      for (const binId in binResult) {
+        const remainingSpace = binResult[binId].remainingSpace;
         if (remainingSpace >= cut.length) {
-          bins[k].remainingSpace -= cut.length;
-
-          cutIds.push(bins[k].id);
+          binResult[binId].cutIds.push(cut.id);
+          binResult[binId].remainingSpace -= cut.length;
           placed = true;
           break;
         }
@@ -33,18 +29,14 @@ export const OneDPackingUser = (userCuts: UserCuts[], container: number) => {
 
       if (!placed) {
         const remainingSpace = container - cut.length;
+        const newBinId = Object.keys(binResult).length + 1;
 
-        if (remainingSpace >= 0) {
-          const newBin: Bin = {
-            id: bins.length + 1,
-            remainingSpace,
-          };
-
-          bins.push(newBin);
-          cutIds.push(newBin.id);
-        }
+        binResult[newBinId] = {
+          cutIds: [cut.id],
+          remainingSpace,
+        };
       }
     }
   }
-  return { bins, cutIds };
+  return binResult;
 };

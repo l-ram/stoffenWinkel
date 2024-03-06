@@ -19,3 +19,10 @@ export interface PackingResult {
   bins: number[];
   binsUsed: number;
 }
+
+export interface BinResult {
+  [binId: string]: {
+    cutIds: number[];
+    remainingSpace: number;
+  };
+}
