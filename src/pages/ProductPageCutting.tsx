@@ -1,20 +1,14 @@
 import { FormEvent, useEffect, useState } from "react";
 import { BinResult, CutInput, UserCuts } from "../types/types";
 import { OneDPackingUser } from "../hooks/OneDPackingUser";
-import { Button, TextField } from "@mui/material";
+import { Button, IconButton, TextField } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
 
 const ProductPageCutting = () => {
   const [lengthInput, setLengthInput] = useState<number>(0);
   const [countInput, setCountInput] = useState<number>(0);
 
-  const [cuts, setCuts] = useState<UserCuts[]>([
-    {
-      id: 0,
-      length: 0,
-      count: 0,
-    },
-  ]);
+  const [cuts, setCuts] = useState<UserCuts[]>([]);
 
   const [bins, setBins] = useState<BinResult>({});
   const containerCapacity = 100;
@@ -46,21 +40,18 @@ const ProductPageCutting = () => {
     setCuts((prevCuts) => [...prevCuts, newCut]);
   };
 
-  const handleRemoveCut = (e: number) => {
-    const updatedCuts = cuts.map((cut) => cut.id[e]);
+  const handleRemoveCut = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const key = event.currentTarget.getAttribute("data-key");
 
-    const maxId = Math.max(...cuts.map((cut) => cut.id), 0);
+    console.log("div key", key);
 
-    const newCut: CutInput = {
-      id: maxId + 1,
-      length: lengthInput,
-      count: countInput,
-    };
-
-    setCuts(updatedCuts);
+    if (key) {
+      const keyNumber = parseInt(key, 10);
+      const indexOfCutToRemove = cuts.findIndex((cut) => cut.id === keyNumber);
+      const cutsAfterRemove = cuts.splice(indexOfCutToRemove);
+      setCuts(cutsAfterRemove);
+    }
   };
-
-  console.log(cuts);
 
   const colourIdMapping: Record<number, string> = {
     1: "#ff9ccc",
@@ -187,25 +178,49 @@ const ProductPageCutting = () => {
         >
           <div
             style={{
+              display: "flex",
+              flexDirection: "column",
+              flexWrap: "wrap",
+              width: "100%",
               padding: "1rem",
+              fontSize: "12px",
             }}
           >
-            <h4>Cuts Array:</h4>
-            <pre>{JSON.stringify(cuts, null, 2)}</pre>
+            {cuts.length < 1 ? (
+              <div>No cuts yet!</div>
+            ) : (
+              cuts.map((l) => {
+                return (
+                  <div
+                    data-key={l.id}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      width: "100%",
+                      backgroundColor: "lightgrey",
+                      marginBottom: "0.5rem",
+                      borderRadius: "1rem",
+                      padding: "0.5rem",
+                    }}
+                  >
+                    <div>Cut id: {l.id}</div>
+                    <div>Length: {l.length}</div>
+                    <div>Amount: {l.count}</div>
+                    <IconButton
+                      style={{ flexGrow: 2, fontSize: 12 }}
+                      color="error"
+                      data-key={l.id}
+                      onClick={(e) => {
+                        handleRemoveCut(e);
+                      }}
+                    >
+                      <Delete data-key={l.id} style={{ width: "25px" }} />
+                    </IconButton>
+                  </div>
+                );
+              })
+            )}
           </div>
-
-          {cuts.map((l, id) => {
-            return (
-              <div key={l.id}>
-                <div>Cut id: {l.id}</div>
-                <div>Length: {l.length}</div>
-                <div>Amount: {l.count}</div>
-                <Button size="small" color="error" variant={"contained"}>
-                  <Delete style={{ width: "25px" }} />
-                </Button>
-              </div>
-            );
-          })}
         </div>
       </section>
     </div>
