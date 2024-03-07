@@ -1,4 +1,4 @@
-import { Bin, BinResult, UserCuts } from "../types/types";
+import { BinResult, UserCuts } from "../types/types";
 
 export const OneDPackingUser = (userCuts: UserCuts[], container: number) => {
   // We accept weights, and container size

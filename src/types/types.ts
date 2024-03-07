@@ -4,6 +4,12 @@ export interface CheckoutData {
   user: string;
 }
 
+export interface CutInput {
+  id: number;
+  length: number;
+  count: number;
+}
+
 export interface UserCuts {
   id: number;
   length: number;
