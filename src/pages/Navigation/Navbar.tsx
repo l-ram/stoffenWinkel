@@ -191,6 +191,12 @@ const Navbar = ({}: NavBar) => {
               <h2>Needles</h2>
             </Link>
           </li>
+          <li>
+            {" "}
+            <Link to="/productPage">
+              <h2 colorolor="pink">NEW! Cutting calculator</h2>
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>
