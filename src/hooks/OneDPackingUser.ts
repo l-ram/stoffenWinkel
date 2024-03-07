@@ -3,11 +3,8 @@ import { BinResult, UserCuts } from "../types/types";
 export const OneDPackingUser = (userCuts: UserCuts[], container: number) => {
   // We accept weights, and container size
 
-  // const individualCuts = userCuts.flatMap((cut) =>
-  //   Array.from({ length: cut.count }, () => ({ ...cut }))
-  // );
-
   const sortedCuts = userCuts.sort((a, b) => b.length - a.length);
+
   const binResult: BinResult = {};
 
   for (let i = 0; i < sortedCuts.length; i++) {

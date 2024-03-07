@@ -46,6 +46,20 @@ const ProductPageCutting = () => {
     setCuts((prevCuts) => [...prevCuts, newCut]);
   };
 
+  const handleRemoveCut = (e: number) => {
+    const updatedCuts = cuts.map((cut) => cut.id[e]);
+
+    const maxId = Math.max(...cuts.map((cut) => cut.id), 0);
+
+    const newCut: CutInput = {
+      id: maxId + 1,
+      length: lengthInput,
+      count: countInput,
+    };
+
+    setCuts(updatedCuts);
+  };
+
   console.log(cuts);
 
   const colourIdMapping: Record<number, string> = {
@@ -96,9 +110,6 @@ const ProductPageCutting = () => {
           <Button type="submit" variant={"outlined"}>
             {" "}
             <Add /> Add cut
-          </Button>
-          <Button color="error" variant={"contained"}>
-            <Delete />
           </Button>
         </form>
       </div>
@@ -182,6 +193,19 @@ const ProductPageCutting = () => {
             <h4>Cuts Array:</h4>
             <pre>{JSON.stringify(cuts, null, 2)}</pre>
           </div>
+
+          {cuts.map((l, id) => {
+            return (
+              <div key={l.id}>
+                <div>Cut id: {l.id}</div>
+                <div>Length: {l.length}</div>
+                <div>Amount: {l.count}</div>
+                <Button size="small" color="error" variant={"contained"}>
+                  <Delete style={{ width: "25px" }} />
+                </Button>
+              </div>
+            );
+          })}
         </div>
       </section>
     </div>
