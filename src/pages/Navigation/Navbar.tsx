@@ -194,7 +194,7 @@ const Navbar = ({}: NavBar) => {
           <li>
             {" "}
             <Link to="/productPage">
-              <h2 colorolor="pink">NEW! Cutting calculator</h2>
+              <h2>NEW! Cutting calculator</h2>
             </Link>
           </li>
         </ul>

@@ -1,15 +1,25 @@
 import { FormEvent, useEffect, useState } from "react";
-import { BinResult, CutInput, UserCuts } from "../types/types";
+import { BinResult, CutInput, SelectedProduct, UserCuts } from "../types/types";
 import { OneDPackingUser } from "../hooks/OneDPackingUser";
 import { Button, IconButton, TextField } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
+import "./productPage.scss";
+import { PRODUCTS } from "../db/products";
+import "../components/productPage/productImageSlider.scss";
+import ProductImageSlider from "../components/productPage/ProductImageSlider";
 
 const ProductPageCutting = () => {
+  // State for product
+  const [currentProduct, setCurrentProduct] = useState<SelectedProduct[]>([]);
+  const [selectProduct, setSelectProduct] = useState<string>("wood");
+
+  const selectedProductImages = PRODUCTS[selectProduct].map((x) => x.images)[0];
+  console.log(selectedProductImages);
+
+  // State for cutting
   const [lengthInput, setLengthInput] = useState<number>(0);
   const [countInput, setCountInput] = useState<number>(0);
-
   const [cuts, setCuts] = useState<UserCuts[]>([]);
-
   const [bins, setBins] = useState<BinResult>({});
   const containerCapacity = 100;
 
@@ -42,14 +52,14 @@ const ProductPageCutting = () => {
 
   const handleRemoveCut = (event: React.MouseEvent<HTMLButtonElement>) => {
     const key = event.currentTarget.getAttribute("data-key");
-
-    console.log("div key", key);
-
     if (key) {
       const keyNumber = parseInt(key, 10);
       const indexOfCutToRemove = cuts.findIndex((cut) => cut.id === keyNumber);
-      const cutsAfterRemove = cuts.splice(indexOfCutToRemove);
-      setCuts(cutsAfterRemove);
+      setCuts((prevCuts) => {
+        const updatedCuts = [...prevCuts];
+        updatedCuts.splice(indexOfCutToRemove, 1);
+        return updatedCuts;
+      });
     }
   };
 
@@ -66,13 +76,24 @@ const ProductPageCutting = () => {
   };
 
   return (
-    <div
-      style={{
-        width: "95%",
-        marginLeft: "auto",
-        marginRight: "auto",
-      }}
-    >
+    <div className="productPage">
+      <section className="product">
+        <div className="product productImage ">
+          <ProductImageSlider>
+            {selectedProductImages.map((image, index) => {
+              return <img key={index} src={image} alt={index.toString()} />;
+            })}
+          </ProductImageSlider>
+        </div>
+        <div className="product productInfo ">
+          <h1 className=" productInfo__title"></h1>
+          <h2 className=" productInfo__subTitle"></h2>
+          {/* Product Selector */}
+          <p className="productInfo__price"></p>
+          <div className="productInfo__info"></div>
+        </div>
+      </section>
+
       <div
         className="user-input"
         style={{
@@ -203,18 +224,20 @@ const ProductPageCutting = () => {
                       padding: "0.5rem",
                     }}
                   >
-                    <div>Cut id: {l.id}</div>
+                    <div key={"test"}>Cut id: {l.id}</div>
                     <div>Length: {l.length}</div>
                     <div>Amount: {l.count}</div>
                     <IconButton
-                      style={{ flexGrow: 2, fontSize: 12 }}
-                      color="error"
+                      style={{ width: "20px" }}
                       data-key={l.id}
                       onClick={(e) => {
                         handleRemoveCut(e);
                       }}
                     >
-                      <Delete data-key={l.id} style={{ width: "25px" }} />
+                      <Delete
+                        data-key={l.id}
+                        style={{ height: "17px", color: "teal" }}
+                      />
                     </IconButton>
                   </div>
                 );

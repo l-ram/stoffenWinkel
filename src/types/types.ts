@@ -32,3 +32,15 @@ export interface BinResult {
     remainingSpace: number;
   };
 }
+
+export interface SelectedProduct {
+  [material: string]: {
+    title: string;
+    subtitle: string;
+    price: number;
+    info: string;
+    size: string;
+    weight: string;
+    images: string[];
+  }[];
+}
