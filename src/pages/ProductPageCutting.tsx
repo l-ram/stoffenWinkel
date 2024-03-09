@@ -10,11 +10,19 @@ import ProductImageSlider from "../components/productPage/ProductImageSlider";
 
 const ProductPageCutting = () => {
   // State for product
-  const [currentProduct, setCurrentProduct] = useState<SelectedProduct[]>([]);
+
   const [selectProduct, setSelectProduct] = useState<string>("wood");
 
+  const [currentProduct, setCurrentProduct] = useState<SelectedProduct[0]>();
+
+  useEffect(() => {
+    const current = PRODUCTS[selectProduct];
+    setCurrentProduct(current);
+  }, [selectProduct]);
+
   const selectedProductImages = PRODUCTS[selectProduct].map((x) => x.images)[0];
-  console.log(selectedProductImages);
+
+  console.log(currentProduct);
 
   // State for cutting
   const [lengthInput, setLengthInput] = useState<number>(0);
@@ -79,18 +87,18 @@ const ProductPageCutting = () => {
     <div className="productPage">
       <section className="product">
         <div className="product productImage ">
-          <ProductImageSlider>
-            {selectedProductImages.map((image, index) => {
-              return <img key={index} src={image} alt={index.toString()} />;
-            })}
-          </ProductImageSlider>
+          <ProductImageSlider selectedProductImages={selectedProductImages} />
         </div>
         <div className="product productInfo ">
-          <h1 className=" productInfo__title"></h1>
-          <h2 className=" productInfo__subTitle"></h2>
+          <h1 className=" productInfo__title">{currentProduct?.[0].title}</h1>
+          <h2 className=" productInfo__subTitle">
+            {currentProduct?.[0].subtitle}
+          </h2>
           {/* Product Selector */}
-          <p className="productInfo__price"></p>
-          <div className="productInfo__info"></div>
+          <p className="productInfo__price">€{currentProduct?.[0].price}/pm</p>
+          <p className="productInfo__size">{currentProduct?.[0].size}</p>
+          <p className="productInfo__weight">{currentProduct?.[0].weight}</p>
+          <div className="productInfo__info">{currentProduct?.[0].info}</div>
         </div>
       </section>
 

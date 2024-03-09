@@ -1,87 +1,49 @@
-import React, { useState, useEffect } from "react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
-import "./productImageSlider.scss";
+interface ProductImageSliderProps {
+  selectedProductImages: string[];
+}
 
-const ProductImageSlider = ({ children }: any) => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [slideDone, setSlideDone] = useState(true);
+const ProductImageSlider = ({
+  selectedProductImages,
+}: ProductImageSliderProps) => {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+    nextArrow: (
+      <div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+            <path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" />
+          </svg>
+        </div>
+      </div>
+    ),
 
-  useEffect(() => {
-    if (slideDone) {
-      setSlideDone(false);
-    }
-  }, [slideDone]);
-
-  const slideNext = () => {
-    setActiveIndex((val) => {
-      if (val >= children.length - 1) {
-        return 0;
-      } else {
-        return val + 1;
-      }
-    });
-  };
-
-  const slidePrev = () => {
-    setActiveIndex((val) => {
-      if (val <= 0) {
-        return children.length - 1;
-      } else {
-        return val - 1;
-      }
-    });
+    prevArrow: (
+      <div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+            <path d="M15.293 3.293 6.586 12l8.707 8.707 1.414-1.414L9.414 12l7.293-7.293-1.414-1.414z" />
+          </svg>
+        </div>
+      </div>
+    ),
   };
 
   return (
-    <div className="container__slider">
-      {children.map((item: string, index: string) => {
-        return (
-          <div
-            className={"slider__item slider__item-active-" + (activeIndex + 1)}
-            key={index}
-          >
-            {item}
-          </div>
-        );
-      })}
-
-      <div className="container__slider__links">
-        {children.map((item: string, index: number) => {
-          return (
-            <button
-              key={index}
-              className={
-                activeIndex === index
-                  ? "container__slider__links-small container__slider__links-small-active"
-                  : "container__slider__links-small"
-              }
-              onClick={(e) => {
-                e.preventDefault();
-                setActiveIndex(index);
-              }}
-            ></button>
-          );
-        })}
-      </div>
-
-      <button
-        className="slider__btn-next"
-        onClick={(e) => {
-          e.preventDefault();
-          slideNext();
-        }}
-      >
-        {">"}
-      </button>
-      <button
-        className="slider__btn-prev"
-        onClick={(e) => {
-          e.preventDefault();
-          slidePrev();
-        }}
-      >
-        {"<"}
-      </button>
+    <div>
+      <Slider {...settings}>
+        {selectedProductImages.map((i, idx) => (
+          <img key={idx} src={i}></img>
+        ))}
+      </Slider>
     </div>
   );
 };
