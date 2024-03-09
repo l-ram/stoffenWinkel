@@ -38,13 +38,13 @@ const ProductImageSlider = ({
   };
 
   return (
-    <div>
+    <>
       <Slider {...settings}>
         {selectedProductImages.map((i, idx) => (
           <img key={idx} src={i}></img>
         ))}
       </Slider>
-    </div>
+    </>
   );
 };
 

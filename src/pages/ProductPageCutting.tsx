@@ -7,6 +7,7 @@ import "./productPage.scss";
 import { PRODUCTS } from "../db/products";
 import "../components/productPage/productImageSlider.scss";
 import ProductImageSlider from "../components/productPage/ProductImageSlider";
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material/";
 
 const ProductPageCutting = () => {
   // State for product
@@ -90,10 +91,11 @@ const ProductPageCutting = () => {
           <ProductImageSlider selectedProductImages={selectedProductImages} />
         </div>
         <div className="product productInfo ">
-          <h1 className=" productInfo__title">{currentProduct?.[0].title}</h1>
-          <h2 className=" productInfo__subTitle">
+          <h4 className=" productInfo__subTitle">
             {currentProduct?.[0].subtitle}
-          </h2>
+          </h4>
+          <h1 className=" productInfo__title">{currentProduct?.[0].title}</h1>
+
           {/* Product Selector */}
           <p className="productInfo__price">€{currentProduct?.[0].price}/pm</p>
           <p className="productInfo__size">{currentProduct?.[0].size}</p>

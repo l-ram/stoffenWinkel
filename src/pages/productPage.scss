@@ -5,13 +5,20 @@
 }
 
 .product {
-  display: flex;
-  flex-direction: column;
+  display: inline-block;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .product .productImage {
-  width: 50%;
+  width: 500px;
+  height: 500px;
 }
 
 .product .productInfo {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  align-items: start;
 }
