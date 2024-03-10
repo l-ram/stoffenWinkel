@@ -2,11 +2,16 @@ import { SelectedProduct } from "../../types/types";
 import "./productSelector.scss";
 
 interface ProductSelectorProps {
+  selectedProduct: string;
   products: SelectedProduct;
-  handleSelectProduct: handleSelectProduct(x) => void;
+  handleSelectProduct: (e: any) => void;
 }
 
-const ProductSelector = ({ products }: ProductSelectorProps) => {
+const ProductSelector = ({
+  products,
+  handleSelectProduct,
+  selectedProduct,
+}: ProductSelectorProps) => {
   const arrayKeys = Object.keys(products);
   const arrayValues = Object.values(products);
   console.log(arrayValues);
@@ -15,14 +20,19 @@ const ProductSelector = ({ products }: ProductSelectorProps) => {
     <>
       <div className="productSelector">
         <ul className="productSelector__imageList">
-          {arrayValues.map((x) =>
+          {arrayValues.map((x, idx) =>
             x.map((y) => (
-              <li className="productSelector__select">
+              <li>
                 <img
+                  className={
+                    selectedProduct === arrayKeys[idx]
+                      ? "productSelector__select"
+                      : ""
+                  }
+                  data-key={arrayKeys[idx]}
                   style={{ height: "100%" }}
                   key={y.title}
                   src={y.images[0]}
-                  defaultValue={arrayKeys[y]}
                   onClick={(e) => {
                     handleSelectProduct(e);
                   }}

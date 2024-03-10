@@ -73,9 +73,12 @@ const ProductPageCutting = () => {
     }
   };
 
-  const handleSelectProduct = (e: Event) => {
-    const product = e.currentTargettarget;
-    setSelectProduct(product);
+  const handleSelectProduct = (e: React.MouseEvent<HTMLImageElement>) => {
+    const product = e.currentTarget.getAttribute("data-key");
+    if (product) {
+      console.log("click!", product);
+      setSelectProduct(product);
+    }
   };
 
   const colourIdMapping: Record<number, string> = {
