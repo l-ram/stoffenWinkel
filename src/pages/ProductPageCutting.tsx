@@ -2,12 +2,13 @@ import { FormEvent, useEffect, useState } from "react";
 import { BinResult, CutInput, SelectedProduct, UserCuts } from "../types/types";
 import { OneDPackingUser } from "../hooks/OneDPackingUser";
 import { Button, IconButton, TextField } from "@mui/material";
-import { Add, Delete } from "@mui/icons-material";
+import { Add, Delete, ExpandMoreOutlined } from "@mui/icons-material";
 import "./productPage.scss";
 import { PRODUCTS } from "../db/products";
 import "../components/productPage/productImageSlider.scss";
 import ProductImageSlider from "../components/productPage/ProductImageSlider";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material/";
+import ProductSelector from "../components/productPage/ProductSelector";
 
 const ProductPageCutting = () => {
   // State for product
@@ -72,6 +73,11 @@ const ProductPageCutting = () => {
     }
   };
 
+  const handleSelectProduct = (e: Event) => {
+    const product = e.currentTargettarget;
+    setSelectProduct(product);
+  };
+
   const colourIdMapping: Record<number, string> = {
     1: "#ff9ccc",
     2: "#ff5ee2",
@@ -97,10 +103,50 @@ const ProductPageCutting = () => {
           <h1 className=" productInfo__title">{currentProduct?.[0].title}</h1>
 
           {/* Product Selector */}
+
+          <ProductSelector
+            handleSelectProduct={handleSelectProduct}
+            products={PRODUCTS}
+          />
+
           <p className="productInfo__price">€{currentProduct?.[0].price}/pm</p>
           <p className="productInfo__size">{currentProduct?.[0].size}</p>
           <p className="productInfo__weight">{currentProduct?.[0].weight}</p>
-          <div className="productInfo__info">{currentProduct?.[0].info}</div>
+          <div className="productInfo__info"></div>
+
+          <Accordion
+            style={{ width: "100%", margin: "0.5rem 0 0.5rem 0" }}
+            defaultExpanded
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreOutlined />}
+              aria-controls="panel1-content"
+              id="panel1-header"
+            >
+              Product Info
+            </AccordionSummary>
+            <AccordionDetails>{currentProduct?.[0].info}</AccordionDetails>
+          </Accordion>
+          <Accordion style={{ width: "100%", margin: "0.5rem 0 0.5rem 0" }}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreOutlined />}
+              aria-controls="panel1-content"
+              id="panel1-header"
+            >
+              Weight
+            </AccordionSummary>
+            <AccordionDetails>{currentProduct?.[0].weight}</AccordionDetails>
+          </Accordion>
+          <Accordion style={{ width: "100%", margin: "0.5rem 0 0.5rem 0" }}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreOutlined />}
+              aria-controls="panel1-content"
+              id="panel1-header"
+            >
+              Dimensions
+            </AccordionSummary>
+            <AccordionDetails>{currentProduct?.[0].size}</AccordionDetails>
+          </Accordion>
         </div>
       </section>
 
