@@ -2,13 +2,14 @@ import { FormEvent, useEffect, useState } from "react";
 import { BinResult, CutInput, SelectedProduct, UserCuts } from "../types/types";
 import { OneDPackingUser } from "../hooks/OneDPackingUser";
 import { Button, IconButton, TextField } from "@mui/material";
-import { Add, Delete, ExpandMoreOutlined } from "@mui/icons-material";
+import { Add, Delete, ExpandMoreOutlined, PieChart } from "@mui/icons-material";
 import "./productPage.scss";
 import { PRODUCTS } from "../db/products";
 import "../components/productPage/productImageSlider.scss";
 import ProductImageSlider from "../components/productPage/ProductImageSlider";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material/";
 import ProductSelector from "../components/productPage/ProductSelector";
+import { ResponsiveContainer, Pie } from "recharts";
 
 const ProductPageCutting = () => {
   // State for product
@@ -24,19 +25,23 @@ const ProductPageCutting = () => {
 
   const selectedProductImages = PRODUCTS[selectProduct].map((x) => x.images)[0];
 
-  console.log(currentProduct);
-
   // State for cutting
   const [lengthInput, setLengthInput] = useState<number>(0);
   const [countInput, setCountInput] = useState<number>(0);
   const [cuts, setCuts] = useState<UserCuts[]>([]);
   const [bins, setBins] = useState<BinResult>({});
+  const [percent, setPercent] = useState<number>(0);
   const containerCapacity = 100;
 
   useEffect(() => {
     const result = OneDPackingUser(cuts, containerCapacity);
     setBins(result);
   }, [cuts]);
+
+  useEffect(() => {
+    const percent = calculateWastePercentage(bins);
+    setPercent(percent);
+  }, [bins]);
 
   const handleLengthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLengthInput(Number(event.target.value));
@@ -76,9 +81,18 @@ const ProductPageCutting = () => {
   const handleSelectProduct = (e: React.MouseEvent<HTMLImageElement>) => {
     const product = e.currentTarget.getAttribute("data-key");
     if (product) {
-      console.log("click!", product);
       setSelectProduct(product);
     }
+  };
+
+  const calculateWastePercentage = (bins: BinResult): number => {
+    const totalLength = containerCapacity * Object.keys(bins).length;
+    const totalRemaining = Object.values(bins).reduce((acc, current) => {
+      return acc + current.remainingSpace;
+    }, 0);
+
+    const percentage: number = (totalRemaining / totalLength) * 100;
+    return percentage;
   };
 
   const colourIdMapping: Record<number, string> = {
@@ -110,9 +124,12 @@ const ProductPageCutting = () => {
           <ProductSelector
             handleSelectProduct={handleSelectProduct}
             products={PRODUCTS}
+            selectedProduct={selectProduct}
           />
 
-          <p className="productInfo__price">€{currentProduct?.[0].price}/pm</p>
+          <h1 className="productInfo__price">
+            €{currentProduct?.[0].price} /pm
+          </h1>
           <p className="productInfo__size">{currentProduct?.[0].size}</p>
           <p className="productInfo__weight">{currentProduct?.[0].weight}</p>
           <div className="productInfo__info"></div>
@@ -190,15 +207,22 @@ const ProductPageCutting = () => {
         style={{
           display: "flex",
           flexDirection: "row",
+          flexWrap: "wrap",
           marginLeft: "auto",
           marginRight: "auto",
           marginBottom: "2rem",
           width: "75%",
         }}
       >
+        <h3 style={{ flexBasis: "100%" }}>
+          {`${selectProduct[0].toUpperCase()}${selectProduct.substring(
+            1
+          )} dimensions: ${currentProduct?.[0].size}`}{" "}
+        </h3>
         <div
           className="cuts-container"
           style={{
+            flexBasis: "70%",
             borderRadius: "10px",
             display: "flex",
             alignItems: "center",
@@ -303,6 +327,29 @@ const ProductPageCutting = () => {
               })
             )}
           </div>
+
+          <ResponsiveContainer>
+            <PieChart width={730} height={250}>
+              <Pie
+                data={[0, percent]}
+                cx="50%"
+                cy="50%"
+                outerRadius={5}
+                fill="#8884d8"
+              />
+              {/* <Pie
+                data={data02}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
+                fill="#82ca9d"
+                label
+              /> */}
+            </PieChart>
+          </ResponsiveContainer>
         </div>
       </section>
     </div>

@@ -6,7 +6,7 @@
 
 .product {
   display: flex;
-  width: 100%;
+  width: 85%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 1rem;
@@ -22,6 +22,10 @@
 .product .productInfo {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 40%;
   align-items: start;
+}
+
+.productInfo__price {
+  margin: 1rem;
 }

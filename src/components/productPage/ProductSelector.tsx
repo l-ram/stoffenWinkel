@@ -15,6 +15,7 @@ const ProductSelector = ({
   const arrayKeys = Object.keys(products);
   const arrayValues = Object.values(products);
   console.log(arrayValues);
+  console.log("Selected product:", selectedProduct);
 
   return (
     <>
@@ -27,7 +28,7 @@ const ProductSelector = ({
                   className={
                     selectedProduct === arrayKeys[idx]
                       ? "productSelector__select"
-                      : ""
+                      : "productSelector__selectHover"
                   }
                   data-key={arrayKeys[idx]}
                   style={{ height: "100%" }}
