@@ -2,7 +2,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { BinResult, CutInput, SelectedProduct, UserCuts } from "../types/types";
 import { OneDPackingUser } from "../hooks/OneDPackingUser";
 import { Button, IconButton, TextField } from "@mui/material";
-import { Add, Delete, ExpandMoreOutlined, PieChart } from "@mui/icons-material";
+import { Add, Delete, ExpandMoreOutlined } from "@mui/icons-material";
 import "./productPage.scss";
 import { PRODUCTS } from "../db/products";
 import "../components/productPage/productImageSlider.scss";
