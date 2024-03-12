@@ -33,6 +33,19 @@ const ProductPageCutting = () => {
   const [percent, setPercent] = useState<number>(1);
   const containerCapacity = 100;
 
+  // Hovering
+  const [hoveredCutId, setHoveredCutId] = useState<number | null>(null);
+
+  const handleHover = (cutId: number) => {
+    setHoveredCutId(cutId);
+  };
+
+  console.log("hover:", hoveredCutId);
+
+  const handleLeave = () => {
+    setHoveredCutId(null);
+  };
+
   useEffect(() => {
     const result = OneDPackingUser(cuts, containerCapacity);
     setBins(result);
@@ -42,8 +55,6 @@ const ProductPageCutting = () => {
     const percent = calculateWastePercentage(bins);
     setPercent(percent);
   }, [bins]);
-
-  console.log(percent);
 
   const handleLengthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLengthInput(Number(event.target.value));
@@ -243,6 +254,11 @@ const ProductPageCutting = () => {
                           borderWidth: "1px",
                           borderColor: "lightgrey",
                         }}
+                        className={`${
+                          cutId === hoveredCutId ? "highlight" : ""
+                        }`}
+                        onMouseEnter={() => handleHover(cutId)}
+                        onMouseLeave={handleLeave}
                       />
                     );
                   }
@@ -267,12 +283,17 @@ const ProductPageCutting = () => {
                       justifyContent: "space-between",
                       alignItems: "center",
                       width: "100%",
-                      backgroundColor: "lightgrey",
+                      backgroundColor: `${
+                        l.id === hoveredCutId ? "darkgrey" : "lightgrey"
+                      }`,
                       marginBottom: "0.5rem",
                       borderRadius: "5px",
                       padding: "0.25rem",
                       fontSize: "12px",
                     }}
+                    className={`${l.id === hoveredCutId ? "darken" : ""}`}
+                    onMouseEnter={() => handleHover(l.id)}
+                    onMouseLeave={handleLeave}
                   >
                     <div key={"test"}>Cut id: {l.id}</div>
                     <div>Length: {l.length}</div>

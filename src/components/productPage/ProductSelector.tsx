@@ -14,8 +14,6 @@ const ProductSelector = ({
 }: ProductSelectorProps) => {
   const arrayKeys = Object.keys(products);
   const arrayValues = Object.values(products);
-  console.log(arrayValues);
-  console.log("Selected product:", selectedProduct);
 
   return (
     <>

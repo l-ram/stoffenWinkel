@@ -1,3 +1,16 @@
+.highlight {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border: solid 2px #fff;
+  box-shadow: inset 15px 0 30px rgba(0, 0, 0, 0.386),
+    inset -15px 0 30px rgba(68, 86, 87, 0.47);
+}
+
+.darken {
+  background-color: darkgray;
+}
+
 .productPage {
   width: 95%;
   margin-left: auto;
