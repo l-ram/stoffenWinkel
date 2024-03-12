@@ -29,3 +29,67 @@
 .productInfo__price {
   margin: 1rem;
 }
+
+.userInput {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+}
+
+.cutsArea {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2rem;
+  width: 75%;
+}
+
+.cutsArea__type {
+  flex-basis: "100%";
+}
+
+.cutsArea__cutsContainer {
+  flex-basis: 70%;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1rem;
+  background-color: "whitesmoke";
+  margin: 0.25rem;
+
+  --s: 100px; /* control the size */
+
+  --_g: #00000000 90deg, rgba(51, 102, 102, 0.117) 0;
+  background: conic-gradient(from 90deg at 1px 1px, var(--_g)),
+    conic-gradient(from 90deg at 1px 1px, var(--_g));
+  background-size: var(--s) var(--s), calc(var(--s) / 5) calc(var(--s) / 5);
+}
+
+.cutsArea__cutsContainerBins {
+  display: flex;
+  flex-direction: row;
+  background-color: lightgray;
+  height: 40px;
+  margin: 0.5rem;
+}
+
+.cutsArea__cuts {
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgrey;
+}
+
+.cutsArea__list {
+  margin: 0.25rem;
+  border-radius: 5px;
+  width: 25%;
+  background-color: "whitesmoke";
+}

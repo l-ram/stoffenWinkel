@@ -9,7 +9,7 @@ import "../components/productPage/productImageSlider.scss";
 import ProductImageSlider from "../components/productPage/ProductImageSlider";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material/";
 import ProductSelector from "../components/productPage/ProductSelector";
-import { ResponsiveContainer, Pie } from "recharts";
+import PercentageGuage from "../components/productPage/PercentageGuage";
 
 const ProductPageCutting = () => {
   // State for product
@@ -30,7 +30,7 @@ const ProductPageCutting = () => {
   const [countInput, setCountInput] = useState<number>(0);
   const [cuts, setCuts] = useState<UserCuts[]>([]);
   const [bins, setBins] = useState<BinResult>({});
-  const [percent, setPercent] = useState<number>(0);
+  const [percent, setPercent] = useState<number>(1);
   const containerCapacity = 100;
 
   useEffect(() => {
@@ -42,6 +42,8 @@ const ProductPageCutting = () => {
     const percent = calculateWastePercentage(bins);
     setPercent(percent);
   }, [bins]);
+
+  console.log(percent);
 
   const handleLengthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLengthInput(Number(event.target.value));
@@ -130,8 +132,7 @@ const ProductPageCutting = () => {
           <h1 className="productInfo__price">
             €{currentProduct?.[0].price} /pm
           </h1>
-          <p className="productInfo__size">{currentProduct?.[0].size}</p>
-          <p className="productInfo__weight">{currentProduct?.[0].weight}</p>
+
           <div className="productInfo__info"></div>
 
           <Accordion
@@ -170,18 +171,12 @@ const ProductPageCutting = () => {
         </div>
       </section>
 
-      <div
-        className="user-input"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          margin: "2rem",
-        }}
-      >
+      <div className="userInput">
         <form onSubmit={handleAddCut}>
           <TextField
+            style={{
+              margin: "0.5rem",
+            }}
             size="small"
             label="Length"
             type="number"
@@ -189,56 +184,41 @@ const ProductPageCutting = () => {
             onChange={handleLengthChange}
           ></TextField>
           <TextField
+            style={{
+              margin: "0.5rem",
+            }}
             size="small"
             label="Count"
             type="number"
             value={countInput}
             onChange={handleCountChange}
           ></TextField>
-          <Button type="submit" variant={"outlined"}>
+          <Button
+            type="submit"
+            style={{
+              color: "#64b0b0",
+              margin: "0.5rem",
+            }}
+            variant={"outlined"}
+          >
             {" "}
             <Add /> Add cut
           </Button>
         </form>
       </div>
 
-      <section
-        className="cuts-area"
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          marginLeft: "auto",
-          marginRight: "auto",
-          marginBottom: "2rem",
-          width: "75%",
-        }}
-      >
-        <h3 style={{ flexBasis: "100%" }}>
+      <section className="cutsArea">
+        <h3 className="cutsArea__type">
           {`${selectProduct[0].toUpperCase()}${selectProduct.substring(
             1
           )} dimensions: ${currentProduct?.[0].size}`}{" "}
         </h3>
-        <div
-          className="cuts-container"
-          style={{
-            flexBasis: "70%",
-            borderRadius: "10px",
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-            width: "75%",
-            marginLeft: "auto",
-            marginRight: "auto",
-            padding: "1rem",
-            backgroundColor: "whitesmoke",
-            margin: "0.25rem",
-          }}
-        >
+        <div className="cutsArea__cutsContainer">
           {Object.keys(bins).map((binId) => {
             const bin = bins[binId];
             return (
               <div
+                className="cutsArea__cutsContainerBins"
                 key={binId}
                 style={{
                   display: "flex",
@@ -275,7 +255,7 @@ const ProductPageCutting = () => {
           className="cuts-list"
           style={{
             margin: "0.25rem",
-            borderRadius: "10px",
+            borderRadius: "5px",
             width: "25%",
             backgroundColor: "whitesmoke",
           }}
@@ -299,12 +279,16 @@ const ProductPageCutting = () => {
                     data-key={l.id}
                     style={{
                       display: "flex",
-                      flexDirection: "column",
+                      flexDirection: "row",
+                      flexWrap: "wrap",
+                      justifyContent: "space-between",
+                      alignItems: "center",
                       width: "100%",
                       backgroundColor: "lightgrey",
                       marginBottom: "0.5rem",
-                      borderRadius: "1rem",
-                      padding: "0.5rem",
+                      borderRadius: "5px",
+                      padding: "0.25rem",
+                      fontSize: "12px",
                     }}
                   >
                     <div key={"test"}>Cut id: {l.id}</div>
@@ -319,37 +303,18 @@ const ProductPageCutting = () => {
                     >
                       <Delete
                         data-key={l.id}
-                        style={{ height: "17px", color: "teal" }}
+                        style={{ height: "15px", color: "#64b0b0" }}
                       />
                     </IconButton>
                   </div>
                 );
               })
             )}
+
+            <h5>Leftover material</h5>
           </div>
 
-          <ResponsiveContainer>
-            <PieChart width={730} height={250}>
-              <Pie
-                data={[0, percent]}
-                cx="50%"
-                cy="50%"
-                outerRadius={5}
-                fill="#8884d8"
-              />
-              {/* <Pie
-                data={data02}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                fill="#82ca9d"
-                label
-              /> */}
-            </PieChart>
-          </ResponsiveContainer>
+          <PercentageGuage percentage={percent}></PercentageGuage>
         </div>
       </section>
     </div>
