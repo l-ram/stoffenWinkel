@@ -109,37 +109,6 @@ const Home = () => {
     console.log("ga ran");
   }, [window.location.href]);
 
-  const userCuts = [
-    {
-      id: 1,
-      length: 10,
-      count: 5,
-    },
-    {
-      id: 2,
-      length: 25,
-      count: 1,
-    },
-    {
-      id: 3,
-      length: 50,
-      count: 1,
-    },
-    {
-      id: 4,
-      length: 30,
-      count: 3,
-    },
-    {
-      id: 5,
-      length: 5,
-      count: 7,
-    },
-  ];
-  const container = 100;
-
-  UseOneDPacking({ userCuts, container });
-
   return (
     <div className="homepage">
       <p>Welcome to De Stoffen Winkel</p>
