@@ -251,25 +251,8 @@ const ProductPageCutting = () => {
             );
           })}
         </div>
-        <div
-          className="cuts-list"
-          style={{
-            margin: "0.25rem",
-            borderRadius: "5px",
-            width: "25%",
-            backgroundColor: "whitesmoke",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              flexWrap: "wrap",
-              width: "100%",
-              padding: "1rem",
-              fontSize: "12px",
-            }}
-          >
+        <div className="cutsArea__list">
+          <div className="cutsArea__listItem">
             {cuts.length < 1 ? (
               <div>No cuts yet!</div>
             ) : (
