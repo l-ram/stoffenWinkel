@@ -27,11 +27,23 @@ export interface PackingResult {
 }
 
 export interface BinResult {
-  [binId: string]: {
+  [binId: number]: {
     cutIds: number[];
     remainingSpace: number;
   };
 }
+
+const binResult = {
+  1: {
+    cutIds: [1, 5, 7, 9],
+    remainingspace: 8,
+  },
+
+  2: {
+    Cutids: [2, 3, 4, 6, 8],
+    Remainingspace: 2,
+  },
+};
 
 export interface SelectedProduct {
   [material: string]: {

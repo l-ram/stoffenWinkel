@@ -2,7 +2,13 @@ import { FormEvent, useEffect, useState } from "react";
 import { BinResult, CutInput, SelectedProduct, UserCuts } from "../types/types";
 import { OneDPackingUser } from "../hooks/OneDPackingUser";
 import { Button, IconButton, TextField } from "@mui/material";
-import { Add, Delete, ExpandMoreOutlined } from "@mui/icons-material";
+import {
+  Add,
+  Delete,
+  ExpandMoreOutlined,
+  ShoppingCart,
+  Download,
+} from "@mui/icons-material";
 import "./productPage.scss";
 import { PRODUCTS } from "../db/products";
 import "../components/productPage/productImageSlider.scss";
@@ -13,9 +19,7 @@ import PercentageGuage from "../components/productPage/PercentageGuage";
 
 const ProductPageCutting = () => {
   // State for product
-
   const [selectProduct, setSelectProduct] = useState<string>("wood");
-
   const [currentProduct, setCurrentProduct] = useState<SelectedProduct[0]>();
 
   useEffect(() => {
@@ -28,7 +32,9 @@ const ProductPageCutting = () => {
   // State for cutting
   const [lengthInput, setLengthInput] = useState<number>(0);
   const [countInput, setCountInput] = useState<number>(0);
+
   const [cuts, setCuts] = useState<UserCuts[]>([]);
+
   const [bins, setBins] = useState<BinResult>({});
   const [percent, setPercent] = useState<number>(1);
   const containerCapacity = 100;
@@ -39,8 +45,6 @@ const ProductPageCutting = () => {
   const handleHover = (cutId: number) => {
     setHoveredCutId(cutId);
   };
-
-  console.log("hover:", hoveredCutId);
 
   const handleLeave = () => {
     setHoveredCutId(null);
@@ -106,6 +110,16 @@ const ProductPageCutting = () => {
 
     const percentage: number = (totalRemaining / totalLength) * 100;
     return percentage;
+  };
+
+  const totalCost = () => {
+    51;
+    const price = currentProduct?.[0].price as number;
+    const amount = Object.keys(bins).length;
+
+    if (price) {
+      return price * amount;
+    }
   };
 
   const colourIdMapping: Record<number, string> = {
@@ -225,8 +239,8 @@ const ProductPageCutting = () => {
           )} dimensions: ${currentProduct?.[0].size}`}{" "}
         </h3>
         <div className="cutsArea__cutsContainer">
-          {Object.keys(bins).map((binId) => {
-            const bin = bins[binId];
+          {Object.keys(bins).map((binId: any) => {
+            const bin = bins[binId as number];
             return (
               <div
                 className="cutsArea__cutsContainerBins"
@@ -240,7 +254,7 @@ const ProductPageCutting = () => {
                   margin: "0.5rem",
                 }}
               >
-                {bin.cutIds.map((cutId, cutIdx) => {
+                {bin.cutIds.map((cutId: number, cutIdx: number) => {
                   const cut = cuts.find((cut) => cut.id === cutId);
                   const color = colourIdMapping[cutId];
                   if (cut) {
@@ -319,6 +333,25 @@ const ProductPageCutting = () => {
           </div>
 
           <PercentageGuage percentage={percent}></PercentageGuage>
+          <div>
+            <p>
+              <Download />
+              Export to PDF
+            </p>
+            <p>Number of pieces: {Object.keys(bins).length} </p>
+            <p>Total cost: €{totalCost()}</p>
+            <Button
+              type="submit"
+              style={{
+                color: "#64b0b0",
+                margin: "0.5rem",
+              }}
+              variant={"outlined"}
+            >
+              {" "}
+              <ShoppingCart /> Add to basket
+            </Button>
+          </div>
         </div>
       </section>
     </div>
