@@ -51,18 +51,17 @@
   margin: 1rem;
 }
 
+.materialType {
+  text-align: center;
+}
+
 .cutsArea {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 2rem;
   width: 75%;
-}
-
-.cutsArea__type {
-  flex-basis: "100%";
 }
 
 .cutsArea__cutsContainer {
@@ -115,6 +114,30 @@
   padding: 1rem;
   font-size: 12px;
 }
+
+.cutsArea__buy {
+  font-size: 14px;
+  border-radius: 5px;
+  width: 90%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #64b0b035;
+  font-size: 12px;
+}
+
+.cutsArea__buyPdf:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 @media screen and (max-width: 1050px) {
   .product .productImage {
     display: block;
@@ -162,7 +185,8 @@
   .cutsArea {
     display: flex;
     justify-content: center;
-    flex-direction: row;
+    align-items: center;
+    flex-direction: column;
     margin-left: auto;
     margin-right: auto;
     width: 95%;

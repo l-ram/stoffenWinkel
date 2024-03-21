@@ -232,12 +232,13 @@ const ProductPageCutting = () => {
         </form>
       </div>
 
+      <h3 className="materialType">
+        {`${selectProduct[0].toUpperCase()}${selectProduct.substring(
+          1
+        )} dimensions: ${currentProduct?.[0].size}`}{" "}
+      </h3>
+
       <section className="cutsArea">
-        <h3 className="cutsArea__type">
-          {`${selectProduct[0].toUpperCase()}${selectProduct.substring(
-            1
-          )} dimensions: ${currentProduct?.[0].size}`}{" "}
-        </h3>
         <div className="cutsArea__cutsContainer">
           {Object.keys(bins).map((binId: any) => {
             const bin = bins[binId as number];
@@ -333,18 +334,28 @@ const ProductPageCutting = () => {
           </div>
 
           <PercentageGuage percentage={percent}></PercentageGuage>
-          <div>
-            <p>
-              <Download />
+          <div className="cutsArea__buy">
+            <p className="cutsArea__buyPdf">
+              <Download
+                style={{
+                  color: "green",
+                }}
+              />
               Export to PDF
             </p>
-            <p>Number of pieces: {Object.keys(bins).length} </p>
-            <p>Total cost: €{totalCost()}</p>
+            <p className="cutsArea__buyPieces">
+              Number of pieces: {Object.keys(bins).length}{" "}
+            </p>
+            <h4 className="cutsArea__buyTotal">Total cost: €{totalCost()}</h4>
             <Button
-              type="submit"
+              disabled={cuts.length < 1 ? true : false}
+              size="small"
+              type="button"
               style={{
+                fontSize: "12px",
                 color: "#64b0b0",
                 margin: "0.5rem",
+                maxWidth: "45%",
               }}
               variant={"outlined"}
             >
