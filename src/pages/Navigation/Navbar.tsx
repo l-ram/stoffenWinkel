@@ -193,7 +193,7 @@ const Navbar = ({}: NavBar) => {
           </li>
           <li>
             {" "}
-            <Link to="/productPage">
+            <Link to="/cuttingPage">
               <h2>NEW! Cutting calculator</h2>
             </Link>
           </li>

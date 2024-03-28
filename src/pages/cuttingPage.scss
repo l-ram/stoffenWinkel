@@ -1,0 +1,227 @@
+.highlight {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border: solid 2px #fff;
+  box-shadow: inset 15px 0 30px rgba(0, 0, 0, 0.386),
+    inset -15px 0 30px rgba(68, 86, 87, 0.47);
+}
+
+.darken {
+  background-color: darkgray;
+}
+
+.productPage {
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.product {
+  display: flex;
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.product .productImage {
+  display: inline;
+  width: 500px;
+  height: 500px;
+}
+
+.product .productInfo {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  align-items: start;
+}
+
+.productInfo__price {
+  margin: 1rem;
+}
+
+.userInput {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+}
+
+.materialType {
+  text-align: center;
+}
+
+.cutsArea {
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2rem;
+  width: 75%;
+}
+
+.cutsArea__cutsContainer {
+  flex-basis: 70%;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1rem;
+  background-color: "whitesmoke";
+  margin: 0.25rem;
+
+  --s: 100px; /* control the size */
+
+  --_g: #00000000 90deg, rgba(51, 102, 102, 0.117) 0;
+  background: conic-gradient(from 90deg at 1px 1px, var(--_g)),
+    conic-gradient(from 90deg at 1px 1px, var(--_g));
+  background-size: var(--s) var(--s), calc(var(--s) / 5) calc(var(--s) / 5);
+}
+
+.cutsArea__cutsContainerBins {
+  display: flex;
+  flex-direction: row;
+  background-color: lightgray;
+  height: 40px;
+  margin: 0.5rem;
+}
+
+.cutsArea__cuts {
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgrey;
+}
+
+.cutsArea__list {
+  margin: 0.25rem;
+  border-radius: 5px;
+  width: 25%;
+  background-color: whitesmoke;
+}
+
+.cutsArea__listItem {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 1rem;
+  font-size: 12px;
+}
+
+.cutsArea__buy {
+  font-size: 14px;
+  border-radius: 5px;
+  width: 90%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #64b0b035;
+  font-size: 12px;
+}
+
+.cutsArea__buyPdf:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 1050px) {
+  .product .productImage {
+    display: block;
+    width: 350px;
+    height: 350px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .productPage {
+    width: 98%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .product {
+    display: block;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .product .productImage {
+    display: block;
+    width: 250px;
+    height: 250px;
+  }
+
+  .product .productInfo {
+    display: block;
+    flex-direction: column;
+    width: 80%;
+    align-items: start;
+  }
+
+  .userInput {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .cutsArea {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    width: 95%;
+  }
+
+  .cutsArea__cutsContainer {
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: "whitesmoke";
+    --s: 100px; /* control the size */
+
+    --_g: #00000000 90deg, rgba(51, 102, 102, 0.117) 0;
+    background: conic-gradient(from 90deg at 1px 1px, var(--_g)),
+      conic-gradient(from 90deg at 1px 1px, var(--_g));
+    background-size: var(--s) var(--s), calc(var(--s) / 5) calc(var(--s) / 5);
+  }
+
+  .cutsArea__list {
+    margin: 0.25rem;
+    border-radius: 5px;
+    width: 75%;
+    background-color: whitesmoke;
+  }
+
+  .cutsArea__listItem {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 1rem;
+    font-size: 12px;
+  }
+}

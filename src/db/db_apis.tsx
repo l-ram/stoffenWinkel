@@ -203,3 +203,17 @@ export const useGetProducts = (
     },
   });
 };
+
+export const useGetProductPage = async (productId: number) => {
+  return useQuery({
+    queryKey: ["productPage"],
+    queryFn: async () => {
+      const currentProduct = await supabase
+        .from("catalog")
+        .select("*")
+        .eq("product_id", productId)
+        .returns<Database["public"]["Tables"]["catalog"]["Row"][]>();
+      return currentProduct;
+    },
+  });
+};

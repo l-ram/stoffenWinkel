@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import CategorySelector from "../components/CategorySelector";
 import SortingSelector from "../components/SortingSelector";
 import { useSession } from "../context/SessionContext";
+import { useNavigate } from "react-router-dom";
 import ReactGA from "react-ga4";
 
 const Products = () => {
@@ -19,6 +20,7 @@ const Products = () => {
   const [isSorted, setSorting] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const categories = ["All", "Fabric", "Wool", "Needles"];
+  const navigate = useNavigate();
 
   // Products hook
   const {
@@ -27,6 +29,10 @@ const Products = () => {
     isError,
     error,
   } = useGetProducts(page, itemsPerPage, selectedCategory, isSorted);
+
+  const handleProductPageRouting = (productId: number) => {
+    navigate(`/productPage/:${productId}`);
+  };
 
   const totalPages = Math.ceil((products?.count as number) / itemsPerPage);
   console.log("total pages:", totalPages);
@@ -47,8 +53,6 @@ const Products = () => {
       setSorting(sort);
     }
   };
-
-  console.log(isSorted);
 
   const handleSelectedCategory = (
     e: React.MouseEvent<HTMLParagraphElement>
@@ -98,7 +102,12 @@ const Products = () => {
         <div className="products__cards">
           {products?.data?.map((product) => (
             <div key={product.product_id} className="products__card">
-              <div className="card__image-container">
+              <div
+                className="card__image-container"
+                onClick={() => {
+                  handleProductPageRouting(product.product_id);
+                }}
+              >
                 <img src={product.image_url as string} />
               </div>
               <div className="card__content">

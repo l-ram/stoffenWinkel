@@ -15,6 +15,7 @@ import Favourites from "./pages/Favourites";
 import ProductPageCutting from "./pages/ProductPageCutting";
 import ReactGA from "react-ga4";
 import { useEffect } from "react";
+import ProductPage from "./pages/ProductPage";
 ReactGA.initialize("G-C75192SJDV");
 
 const App = () => {
@@ -29,7 +30,8 @@ const App = () => {
         <Route path="/" element={<Outlet />}>
           <Route index element={<Home />} />
           <Route path="/products" element={<Products />} />
-          <Route path="/productPage" element={<ProductPageCutting />} />
+          <Route path="/productPage/:productId" element={<ProductPage />} />
+          <Route path="/cuttingPage" element={<ProductPageCutting />} />
           <Route path="/basket" element={<Basket />} />
           <Route path="/loginRegister" element={<LoginRegister />} />
           <Route path="/account/" element={<Account />}>

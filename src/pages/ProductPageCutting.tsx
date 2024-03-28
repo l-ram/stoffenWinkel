@@ -9,7 +9,7 @@ import {
   ShoppingCart,
   Download,
 } from "@mui/icons-material";
-import "./productPage.scss";
+import "./cuttingPage.scss";
 import { PRODUCTS } from "../db/products";
 import "../components/productPage/productImageSlider.scss";
 import ProductImageSlider from "../components/productPage/ProductImageSlider";
