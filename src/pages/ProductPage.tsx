@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { SelectedProduct } from "../types/types";
 import { ExpandMoreOutlined } from "@mui/icons-material";
 import "./productPage.scss";
 import { PRODUCTS } from "../db/products";
 import "../components/productPage/productImageSlider.scss";
-import ProductImageSlider from "../components/productPage/ProductImageSlider";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material/";
 import ProductSelector from "../components/productPage/ProductSelector";
-import { useGetOrders, useGetProductPage } from "../db/db_apis";
+import { useGetProductPage } from "../db/db_apis";
+import CreateReview from "../components/CreateReview";
+import ListReviews from "../components/ListReviews";
+import { useSession } from "../context/SessionContext";
 
 const ProductPage = () => {
   // Product routing
@@ -19,9 +21,7 @@ const ProductPage = () => {
     convert = parseInt(productId.slice(1), 10);
   }
 
-  console.log(convert);
-
-  const {} = useGetProductPage(convert);
+  const { data: product, isError, isLoading } = useGetProductPage(convert);
 
   // State for product
   const [selectProduct, setSelectProduct] = useState<string>("wood");
@@ -31,6 +31,8 @@ const ProductPage = () => {
     const current = PRODUCTS[selectProduct];
     setCurrentProduct(current);
   }, [selectProduct]);
+
+  const session = useSession();
 
   const selectedProductImages = PRODUCTS[selectProduct].map((x) => x.images)[0];
 
@@ -45,13 +47,11 @@ const ProductPage = () => {
     <div className="productPage">
       <section className="product">
         <div className="product productImage ">
-          <ProductImageSlider selectedProductImages={selectedProductImages} />
+          <img src={product?.image_url as string}></img>
         </div>
         <div className="product productInfo ">
-          <h4 className=" productInfo__subTitle">
-            {currentProduct?.[0].subtitle}
-          </h4>
-          <h1 className=" productInfo__title">{currentProduct?.[0].title}</h1>
+          <h4 className=" productInfo__subTitle">{product?.category_id}</h4>
+          <h1 className=" productInfo__title">{product?.name}</h1>
 
           {/* Product Selector */}
 
@@ -61,9 +61,7 @@ const ProductPage = () => {
             selectedProduct={selectProduct}
           />
 
-          <h1 className="productInfo__price">
-            €{currentProduct?.[0].price} /pm
-          </h1>
+          <h1 className="productInfo__price">€{product?.price}</h1>
 
           <div className="productInfo__info"></div>
 
@@ -78,17 +76,7 @@ const ProductPage = () => {
             >
               Product Info
             </AccordionSummary>
-            <AccordionDetails>{currentProduct?.[0].info}</AccordionDetails>
-          </Accordion>
-          <Accordion style={{ width: "100%", margin: "0.5rem 0 0.5rem 0" }}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreOutlined />}
-              aria-controls="panel1-content"
-              id="panel1-header"
-            >
-              Weight
-            </AccordionSummary>
-            <AccordionDetails>{currentProduct?.[0].weight}</AccordionDetails>
+            <AccordionDetails>{product?.short_description}</AccordionDetails>
           </Accordion>
           <Accordion style={{ width: "100%", margin: "0.5rem 0 0.5rem 0" }}>
             <AccordionSummary
@@ -98,9 +86,18 @@ const ProductPage = () => {
             >
               Dimensions
             </AccordionSummary>
-            <AccordionDetails>{currentProduct?.[0].size}</AccordionDetails>
+            <AccordionDetails>{product?.long_description}</AccordionDetails>
           </Accordion>
         </div>
+
+        <section className="reviews">
+          <CreateReview
+            userName={session?.user.user_metadata.first_name}
+            userId={session?.user.id}
+            productId={product?.product_id}
+          />
+          <ListReviews productId={product?.product_id} />
+        </section>
       </section>
     </div>
   );

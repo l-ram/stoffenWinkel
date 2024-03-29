@@ -204,16 +204,26 @@ export const useGetProducts = (
   });
 };
 
-export const useGetProductPage = async (productId: number) => {
+export const useGetProductPage = (productId: number) => {
   return useQuery({
     queryKey: ["productPage"],
     queryFn: async () => {
-      const currentProduct = await supabase
+      const { data: currentProduct } = await supabase
         .from("catalog")
         .select("*")
         .eq("product_id", productId)
-        .returns<Database["public"]["Tables"]["catalog"]["Row"][]>();
+        .single();
+
       return currentProduct;
+    },
+  });
+};
+
+export const newReview = (productId: number) => {
+  return useQuery({
+    queryKey: ["newReview"],
+    queryFn: async () => {
+      const {} = await supabase.from().upsert().eq("");
     },
   });
 };

@@ -44,3 +44,12 @@ export interface SelectedProduct {
     images: string[];
   }[];
 }
+
+export interface ICreateReview {
+  userId: string;
+  userName: string;
+  productId: number;
+  title: string;
+  body: string;
+  rating: number;
+}
