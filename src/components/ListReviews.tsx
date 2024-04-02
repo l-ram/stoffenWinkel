@@ -1,31 +1,47 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./ListReviews.scss";
-import ProductRating from "./ProductRating";
+import { UseGetReviews } from "../db/db_apis";
+import { IListReviews } from "../types/types";
+import { useSession } from "../context/SessionContext";
 
 interface ListReviewsProps {
   productId?: number;
 }
 
-// DB schema
-// reviewId: number PK
-// FK  - productId + userId
-// productid: number
-// userId: text
-// title: text
-// body: text
-// rating: number
-// creationDate: date
-
 const ListReviews = ({ productId }: ListReviewsProps) => {
-  const [reviews, setReviews] = useState([]);
+  useSession();
+  const [reviews, setReviews] = useState<IListReviews[] | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<string | null>(null);
+
+  const { data, error } = UseGetReviews(productId as number);
+
+  useEffect(() => {
+    setIsLoading(true);
+    error ? setIsError(error?.message) : setIsError(null);
+    data ? setReviews(data.data) : setIsError("undefined");
+  }, []);
+
+  console.log(isLoading);
+  console.log(isError);
+  console.log(reviews);
 
   return (
     <div>
-      {reviews.length < 1 ? (
+      {!reviews ? (
         <h4>Be the first to review!</h4>
       ) : (
         <div>
-          <h3>Reviews</h3>
+          <h1>Reviews</h1>
+          {reviews?.map((r, idx) => (
+            <div key={idx}>
+              <div>{r.user_id}</div>
+              <p>{r.timestamp}</p>
+              <div>Rating:{r.rating}</div>
+              <h4>{r.title}</h4>
+              <p>{r.body}</p>
+            </div>
+          ))}
         </div>
       )}
     </div>

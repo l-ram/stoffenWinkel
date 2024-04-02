@@ -219,21 +219,17 @@ export const useGetProductPage = (productId: number) => {
   });
 };
 
-export const useNewReview = (review: ICreateReview | null) => {
+export const UseGetReviews = (productId: number) => {
   return useQuery({
-    queryKey: ["newReview"],
+    queryKey: ["getReviews"],
     queryFn: async () => {
-      if (!review?.body) {
-        return null;
-      } else {
-        const { data, error } = await supabase
-          .from("reviews")
-          .insert(review)
-          .select("*");
-        console.log("Success:", data);
-        console.log("Error:", error);
-        return { data, error };
-      }
+      const { data, error } = await supabase
+        .from("reviews")
+        .select("*")
+        .eq("product_id", productId);
+      console.log("Success:", data);
+      console.log("Error:", error);
+      return { data, error };
     },
   });
 };

@@ -52,3 +52,13 @@ export interface ICreateReview {
   body: string;
   rating: number;
 }
+
+export interface IListReviews {
+  review_id: number;
+  product_id: number;
+  user_id: string;
+  timestamp: string | null;
+  rating: number;
+  title: string;
+  body: string;
+}

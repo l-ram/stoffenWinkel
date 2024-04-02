@@ -3,7 +3,7 @@ import "./createReview.scss";
 import { ICreateReview } from "../types/types";
 import { Box, Rating, CircularProgress } from "@mui/material";
 import { Error, CheckCircleOutline } from "@mui/icons-material";
-import { useNewReview } from "../db/db_apis";
+import { supabase } from "../config/supabase.config";
 
 interface CreateReviewProps {
   userId?: string;
@@ -11,20 +11,8 @@ interface CreateReviewProps {
   productId?: number;
 }
 
-// DB schema
-// reviewId: number PK
-// FK  - productId + userId
-// productid: number
-// userId: text
-// title: text
-// body: text
-// rating: number
-// creationDate: date
-
 const CreateReview = ({ userId, userName, productId }: CreateReviewProps) => {
   const [rating, setRating] = useState<number>(0);
-
-  const [submitReview, setSubmitReview] = useState<ICreateReview | null>(null);
 
   const [userReview, setUserReview] = useState<ICreateReview>({
     user_id: userId as string,
@@ -34,10 +22,9 @@ const CreateReview = ({ userId, userName, productId }: CreateReviewProps) => {
     body: "",
   });
 
-  const { isLoading, isError, data, error, refetch } =
-    useNewReview(submitReview);
-
-  console.log("error:", isError, "loading:", isLoading, "data:", data);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
   const handleReviewChange = (event: React.ChangeEvent<HTMLFormElement>) => {
     setUserReview((previousState) => {
@@ -59,18 +46,29 @@ const CreateReview = ({ userId, userName, productId }: CreateReviewProps) => {
     });
   };
 
-  const handleReviewSubmit = (event: FormEvent) => {
+  const handleReviewSubmit = async (event: FormEvent) => {
+    setIsLoading(true);
     event.preventDefault();
-    setSubmitReview(userReview);
+    const { data, error } = await supabase
+      .from("reviews")
+      .insert(userReview)
+      .select("*");
+    if (error) {
+      setIsError(error.message);
+    }
+    if (data) {
+      setIsLoading(false);
+      setIsSuccess(true);
+    }
+    console.log(data);
+    return data;
   };
 
-  useEffect(() => {
-    refetch();
-  }, [submitReview]);
+  useEffect(() => {}, []);
 
   return (
     <div>
-      {!data && userName && (
+      {!isSuccess && userName && (
         <div>
           <h3>Write a review</h3>
           <form onChange={handleReviewChange} onSubmit={handleReviewSubmit}>
@@ -115,7 +113,7 @@ const CreateReview = ({ userId, userName, productId }: CreateReviewProps) => {
         </div>
       )}
 
-      {data && (
+      {isSuccess && (
         <div>
           <CheckCircleOutline />
           <p> Review added! </p>
