@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../config/supabase.config";
 import { Database } from "../types/db";
-import { CheckoutData } from "../types/types";
+import { CheckoutData, ICreateReview } from "../types/types";
 
 export const addToBasket = async (product_id: number, user_id: string) => {
   if (!user_id) {
@@ -219,11 +219,21 @@ export const useGetProductPage = (productId: number) => {
   });
 };
 
-export const newReview = (productId: number) => {
+export const useNewReview = (review: ICreateReview | null) => {
   return useQuery({
     queryKey: ["newReview"],
     queryFn: async () => {
-      const {} = await supabase.from().upsert().eq("");
+      if (!review?.body) {
+        return null;
+      } else {
+        const { data, error } = await supabase
+          .from("reviews")
+          .insert(review)
+          .select("*");
+        console.log("Success:", data);
+        console.log("Error:", error);
+        return { data, error };
+      }
     },
   });
 };
