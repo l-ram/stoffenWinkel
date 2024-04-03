@@ -199,6 +199,7 @@ export type Database = {
           timestamp: string | null;
           title: string;
           user_id: string;
+          user_name: string;
         };
         Insert: {
           body: string;
@@ -208,6 +209,7 @@ export type Database = {
           timestamp?: string | null;
           title: string;
           user_id: string;
+          user_name: string;
         };
         Update: {
           body?: string;
@@ -217,13 +219,14 @@ export type Database = {
           timestamp?: string | null;
           title?: string;
           user_id?: string;
+          user_name?: string;
         };
         Relationships: [
           {
             foreignKeyName: "reviews_product_id_fkey";
             columns: ["product_id"];
             isOneToOne: false;
-            referencedRelation: "products";
+            referencedRelation: "catalog";
             referencedColumns: ["product_id"];
           }
         ];

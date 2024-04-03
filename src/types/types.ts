@@ -48,6 +48,7 @@ export interface SelectedProduct {
 export interface ICreateReview {
   user_id: string;
   product_id: number;
+  user_name: string;
   title: string;
   body: string;
   rating: number;
@@ -57,6 +58,7 @@ export interface IListReviews {
   review_id: number;
   product_id: number;
   user_id: string;
+  user_name: string;
   timestamp: string | null;
   rating: number;
   title: string;

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../config/supabase.config";
 import { Database } from "../types/db";
-import { CheckoutData, ICreateReview } from "../types/types";
+import { CheckoutData } from "../types/types";
 
 export const addToBasket = async (product_id: number, user_id: string) => {
   if (!user_id) {
@@ -227,8 +227,20 @@ export const UseGetReviews = (productId: number) => {
         .from("reviews")
         .select("*")
         .eq("product_id", productId);
-      console.log("Success:", data);
-      console.log("Error:", error);
+      return { data, error };
+    },
+  });
+};
+
+export const UseGetProductRatings = (productId: number) => {
+  return useQuery({
+    queryKey: ["getRatings"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("reviews")
+        .select("rating")
+        .eq("product_id", productId);
+      console.log(data);
       return { data, error };
     },
   });

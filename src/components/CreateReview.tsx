@@ -17,6 +17,7 @@ const CreateReview = ({ userId, userName, productId }: CreateReviewProps) => {
   const [userReview, setUserReview] = useState<ICreateReview>({
     user_id: userId as string,
     product_id: productId as number,
+    user_name: userName as string,
     rating: rating as number,
     title: "",
     body: "",
@@ -49,22 +50,71 @@ const CreateReview = ({ userId, userName, productId }: CreateReviewProps) => {
   const handleReviewSubmit = async (event: FormEvent) => {
     setIsLoading(true);
     event.preventDefault();
+
+    const { data: existing } = await supabase
+      .from("reviews")
+      .select("*")
+      .eq("product_id", productId as number)
+      .eq("user_id", userId as string);
+
+    console.log("exists?:", existing);
+
+    if (existing?.length > 0) {
+      setIsError("You have already written a review");
+      return;
+    }
+
     const { data, error } = await supabase
       .from("reviews")
       .insert(userReview)
       .select("*");
+
     if (error) {
       setIsError(error.message);
+      return;
     }
     if (data) {
       setIsLoading(false);
       setIsSuccess(true);
     }
-    console.log(data);
     return data;
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {}, [isLoading, isError, isSuccess]);
+
+  const ReviewState = ({
+    isLoading,
+    isError,
+    isSuccess,
+  }: {
+    isLoading: boolean;
+    isError: string | null;
+    isSuccess: boolean;
+  }) => {
+    if (isError) {
+      setIsLoading(false);
+      return (
+        <div>
+          <Error />
+          <p>{isError}</p>
+        </div>
+      );
+    } else if (isLoading) {
+      return (
+        <div>
+          <CircularProgress />
+          <p> Submitting review... </p>
+        </div>
+      );
+    } else if (isSuccess) {
+      return (
+        <div>
+          <CheckCircleOutline />
+          <p> Review added! </p>
+        </div>
+      );
+    }
+  };
 
   return (
     <div>
@@ -99,26 +149,11 @@ const CreateReview = ({ userId, userName, productId }: CreateReviewProps) => {
         </div>
       )}
 
-      {isLoading && (
-        <div>
-          <CircularProgress />
-          <p> Submitting review... </p>
-        </div>
-      )}
-
-      {isError && (
-        <div>
-          <Error />
-          <p> Problem submitting review </p>
-        </div>
-      )}
-
-      {isSuccess && (
-        <div>
-          <CheckCircleOutline />
-          <p> Review added! </p>
-        </div>
-      )}
+      <ReviewState
+        isLoading={isLoading}
+        isError={isError}
+        isSuccess={isSuccess}
+      />
 
       {!userId && <div>Login to leave a review!</div>}
     </div>
