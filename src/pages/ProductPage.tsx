@@ -16,7 +16,6 @@ import { UseGetProductRatings, useGetProductPage } from "../db/db_apis";
 import CreateReview from "../components/CreateReview";
 import ListReviews from "../components/ListReviews";
 import { useSession } from "../context/SessionContext";
-import { dataTagSymbol } from "@tanstack/react-query";
 
 const ProductPage = () => {
   // Product routing
@@ -53,7 +52,7 @@ const ProductPage = () => {
     average = total / numberOfRatings;
   }
 
-  console.log(average);
+  console.log("avg", average);
 
   const handleSelectProduct = (e: React.MouseEvent<HTMLImageElement>) => {
     const product = e.currentTarget.getAttribute("data-key");

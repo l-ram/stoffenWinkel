@@ -57,9 +57,7 @@ const CreateReview = ({ userId, userName, productId }: CreateReviewProps) => {
       .eq("product_id", productId as number)
       .eq("user_id", userId as string);
 
-    console.log("exists?:", existing);
-
-    if (existing?.length > 0) {
+    if ((existing?.length as number) > 0) {
       setIsError("You have already written a review");
       return;
     }
@@ -68,9 +66,9 @@ const CreateReview = ({ userId, userName, productId }: CreateReviewProps) => {
       .from("reviews")
       .insert(userReview)
       .select("*");
-
     if (error) {
       setIsError(error.message);
+      console.log("error:", error.message);
       return;
     }
     if (data) {
