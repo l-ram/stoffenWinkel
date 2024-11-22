@@ -39,8 +39,6 @@ const ProductPage = () => {
 
   const session = useSession();
 
-  console.log(convert);
-
   const { data } = UseGetProductRatings(convert);
 
   const total = data?.data?.reduce((acc, current) => acc + current.rating, 0);
@@ -132,9 +130,9 @@ const ProductPage = () => {
           <CreateReview
             userName={session?.user.user_metadata.first_name}
             userId={session?.user.id}
-            productId={product?.product_id}
+            productId={convert}
           />
-          <ListReviews productId={product?.product_id} />
+          <ListReviews productId={convert} />
         </section>
       </section>
     </div>

@@ -1,36 +1,24 @@
-import { useEffect, useState } from "react";
 import "./ListReviews.scss";
 import { UseGetReviews } from "../db/db_apis";
-import { IListReviews } from "../types/types";
 import { Rating } from "@mui/material";
 
 interface ListReviewsProps {
-  productId?: number;
+  productId: number;
 }
 
 const ListReviews = ({ productId }: ListReviewsProps) => {
-  const [reviews, setReviews] = useState<IListReviews[] | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<string | null>(null);
+  console.log("product id:", productId);
+  const { data, error } = UseGetReviews(productId);
 
-  const { data, error } = UseGetReviews(productId as number);
-
-  useEffect(() => {
-    setIsLoading(true);
-    error ? setIsError(error?.message) : setIsError(null);
-    data ? setReviews(data.data) : setIsError("undefined");
-  }, [data]);
-
-  console.log("reviews for current product:", reviews);
-
+  error ? console.log(error.message) : console.log("reviews:", data);
   return (
     <div>
-      {!reviews ? (
+      {!data ? (
         <h4>Be the first to review!</h4>
       ) : (
         <div>
           <h1>Reviews</h1>
-          {reviews?.map((r, idx) => (
+          {data.data?.map((r, idx) => (
             <div key={idx}>
               <img
                 src={`https://igfmaugvvetikklloxpe.supabase.co/storage/v1/object/public/UserAvatars/${r.user_id}`}

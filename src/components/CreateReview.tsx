@@ -62,6 +62,8 @@ const CreateReview = ({ userId, userName, productId }: CreateReviewProps) => {
       return;
     }
 
+    console.log(userReview);
+
     const { data, error } = await supabase
       .from("reviews")
       .insert(userReview)
