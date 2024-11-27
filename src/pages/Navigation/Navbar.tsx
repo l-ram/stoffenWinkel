@@ -59,11 +59,13 @@ const Navbar = ({}: NavBar) => {
           <li>
             <Tooltip title={"Go to favourties"}>
               <IconButton>
-                <Favorite
-                  sx={{
-                    color: muiPink,
-                  }}
-                />
+                <Link to="/favourites">
+                  <Favorite
+                    sx={{
+                      color: muiPink,
+                    }}
+                  />
+                </Link>
               </IconButton>
             </Tooltip>
           </li>

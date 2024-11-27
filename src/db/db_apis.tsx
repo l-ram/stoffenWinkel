@@ -245,3 +245,15 @@ export const UseGetProductRatings = (productId: number) => {
     },
   });
 };
+
+export const UseGetFavourites = (userId: string) => {
+  return useQuery({
+    queryKey: ["getFavourites"],
+    queryFn: async () => {
+      const { data, error, loading } = await supabase
+        .from("favourites")
+        .select("*")
+        .eq("user_id", userId);
+    },
+  });
+};

@@ -34,6 +34,7 @@ const App = () => {
           <Route path="/cuttingPage" element={<ProductPageCutting />} />
           <Route path="/basket" element={<Basket />} />
           <Route path="/loginRegister" element={<LoginRegister />} />
+          <Route path="/favourites" element={<Favourites />} />
           <Route path="/account/" element={<Account />}>
             <Route index element={<Profile />} />
             <Route path="/account/orders" element={<Orders />} />
