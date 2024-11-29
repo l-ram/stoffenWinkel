@@ -246,13 +246,17 @@ export const UseGetProductRatings = (productId: number) => {
   });
 };
 
+export const UseAddToFavourites = () => {
+  return useQuery;
+};
+
 export const UseGetFavourites = (userId: string) => {
   return useQuery({
     queryKey: ["getFavourites"],
     queryFn: async () => {
       const { data, error, loading } = await supabase
         .from("favourites")
-        .select("*")
+        .select("product_id")
         .eq("user_id", userId);
     },
   });
