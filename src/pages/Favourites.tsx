@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { getFavourites } from "../db/db_apis";
+// import { getFavourites } from "../db/db_apis";
 import ReactGA from "react-ga4";
 
 const Favourites = () => {
-  const { favourites, loading, error } = getFavourites();
+  //   const { favourites, loading, error } = getFavourites();
 
   const [searchText, setSearchText] = useState<string>("");
   const [filteredFaves, setFilteredFaves] = useState(favourites);

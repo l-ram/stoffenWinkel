@@ -16,6 +16,8 @@ import { UseGetProductRatings, useGetProductPage } from "../db/db_apis";
 import CreateReview from "../components/CreateReview";
 import ListReviews from "../components/ListReviews";
 import { useSession } from "../context/SessionContext";
+import AddToFavourites from "../components/productPage/AddToFavourites";
+import { Session } from "@supabase/supabase-js";
 
 const ProductPage = () => {
   // Product routing
@@ -26,7 +28,7 @@ const ProductPage = () => {
     convert = parseInt(productId.slice(1), 10);
   }
 
-  const { data: product, isError, isLoading } = useGetProductPage(convert);
+  const { data: product } = useGetProductPage(convert);
 
   // State for product
   const [selectProduct, setSelectProduct] = useState<string>("wood");
@@ -89,6 +91,8 @@ const ProductPage = () => {
 
           <ProductRating average={average} />
 
+          {/* Favourite */}
+          <AddToFavourites session={session as Session} convert={convert} />
           {/* Product Selector */}
 
           <ProductSelector

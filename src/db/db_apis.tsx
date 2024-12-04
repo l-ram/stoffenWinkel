@@ -1,4 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+} from "@tanstack/react-query";
 import { supabase } from "../config/supabase.config";
 import { Database } from "../types/db";
 import { CheckoutData } from "../types/types";
@@ -246,18 +250,35 @@ export const UseGetProductRatings = (productId: number) => {
   });
 };
 
-export const UseAddToFavourites = () => {
-  return useQuery;
+type FavouritesTable = Database["public"]["Tables"]["favourites"]["Row"];
+
+export const UseAddToFavourites = (userId: string, productId: number) => {
+  return useMutation<FavouritesTable[], Error, void>({
+    mutationFn: async () => {
+      const { data, error } = await supabase
+        .from("favourites")
+        .upsert({
+          user_id: userId,
+          product_id: productId,
+        })
+        .returns<FavouritesTable[]>();
+      if (error) throw new Error(error.message);
+      return data;
+    },
+  });
 };
 
 export const UseGetFavourites = (userId: string) => {
   return useQuery({
     queryKey: ["getFavourites"],
     queryFn: async () => {
-      const { data, error, loading } = await supabase
+      const { data, error } = await supabase
         .from("favourites")
         .select("product_id")
-        .eq("user_id", userId);
+        .eq("user_id", userId)
+        .returns<FavouritesTable[]>();
+      if (error) throw new Error(error.message);
+      return { data, error };
     },
   });
 };
