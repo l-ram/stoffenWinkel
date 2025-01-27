@@ -12,10 +12,7 @@ const AddToFavourites = ({ session, convert }: IAddToFavourites) => {
   const [isFavourite, setIsFavourite] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const { mutate, isSuccess, isError } = UseAddToFavourites(
-    session?.user.id as string,
-    convert
-  );
+  const { mutate } = UseAddToFavourites(session?.user.id as string, convert);
 
   const addProductToFavourites = () => {
     if (!session?.user.id) {
@@ -29,7 +26,7 @@ const AddToFavourites = ({ session, convert }: IAddToFavourites) => {
         setErrorMessage(null);
       },
       onError: (error: Error) => {
-        if (error.message.includes("already exists")) {
+        if (error.message.includes("duplicate key")) {
           setErrorMessage("This product is already in your favourites!");
         } else {
           setErrorMessage("Something went wrong. Please try again.");

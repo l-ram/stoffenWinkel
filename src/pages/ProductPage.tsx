@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { SelectedProduct } from "../types/types";
 import { ExpandMoreOutlined } from "@mui/icons-material";
 import "./productPage.scss";
 import { PRODUCTS } from "../db/products";
@@ -32,12 +31,6 @@ const ProductPage = () => {
 
   // State for product
   const [selectProduct, setSelectProduct] = useState<string>("wood");
-  const [currentProduct, setCurrentProduct] = useState<SelectedProduct[0]>();
-
-  useEffect(() => {
-    const current = PRODUCTS[selectProduct];
-    setCurrentProduct(current);
-  }, [selectProduct]);
 
   const session = useSession();
 
