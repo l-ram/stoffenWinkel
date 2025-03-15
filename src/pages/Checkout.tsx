@@ -1,6 +1,14 @@
 import CheckoutForm from "../components/CheckoutForm";
 import ReactGA from "react-ga4";
 import { useEffect } from "react";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+// Stripe
+const stripePromise = loadStripe(import.meta.env.STRIPE_PUBLIC_KEY);
+
+console.log(import.meta.env.STRIPE_PUBLIC_KEY);
+
 const Checkout = () => {
   useEffect(() => {
     ReactGA.set({ page: window.location.href + window.location.search });
@@ -10,7 +18,16 @@ const Checkout = () => {
   return (
     <div>
       Checkout page!
-      <CheckoutForm />
+      <Elements
+        stripe={stripePromise}
+        options={{
+          mode: "payment",
+          amount: 50,
+          currency: "euro",
+        }}
+      >
+        <CheckoutForm />
+      </Elements>
     </div>
   );
 };
