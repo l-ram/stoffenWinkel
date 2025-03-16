@@ -7,7 +7,7 @@ import { loadStripe } from "@stripe/stripe-js";
 // Stripe
 const stripePromise = loadStripe(import.meta.env.STRIPE_PUBLIC_KEY);
 
-console.log(import.meta.env.STRIPE_PUBLIC_KEY);
+console.log("key", import.meta.env.STRIPE_PUBLIC_KEY);
 
 const Checkout = () => {
   useEffect(() => {

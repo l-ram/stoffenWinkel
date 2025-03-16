@@ -12,7 +12,7 @@ interface CreateReviewProps {
 }
 
 const CreateReview = ({ userId, userName, productId }: CreateReviewProps) => {
-  const [rating, setRating] = useState<number>(0);
+  const [rating, setRating] = useState<number | null>(0);
 
   const [userReview, setUserReview] = useState<ICreateReview>({
     user_id: userId as string,
@@ -131,7 +131,7 @@ const CreateReview = ({ userId, userName, productId }: CreateReviewProps) => {
                 name="rating"
                 value={rating}
                 onChange={(event, newValue) => {
-                  setRating(newValue as number);
+                  setRating(newValue);
                 }}
               />
             </Box>
