@@ -1,4 +1,4 @@
-import "./ListReviews.scss";
+import "./listReviews.scss";
 import { UseGetReviews } from "../db/db_apis";
 import { Rating } from "@mui/material";
 
