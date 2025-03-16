@@ -72,7 +72,7 @@ const Orders = () => {
               {data?.data?.map((row) => (
                 <tr key={row.order_id}>
                   <td>{row.order_id}</td>
-                  <td>{formateDate(row.order_date)}</td>
+                  <td>{formateDate(row.order_date as string)}</td>
                   <td>{row.shipping_address}</td>
                   <td>€{row.order_total.toFixed(2)}</td>
                   <td>Despathched</td>
