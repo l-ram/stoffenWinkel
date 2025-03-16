@@ -131,6 +131,7 @@ const CreateReview = ({ userId, userName, productId }: CreateReviewProps) => {
                 name="rating"
                 value={rating}
                 onChange={(event, newValue) => {
+                  event;
                   setRating(newValue);
                 }}
               />
