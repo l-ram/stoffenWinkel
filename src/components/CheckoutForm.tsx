@@ -8,6 +8,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "../context/SessionContext";
 import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material/";
+import {
+  PaymentElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
 
 const CheckoutForm = () => {
   const session = useSession();
@@ -25,6 +30,32 @@ const CheckoutForm = () => {
     paymentType: "Card",
     user: "",
   });
+
+  const stripe = useStripe();
+  const elements = useElements();
+  const [message, setMessage] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const postPayment = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!stripe || !elements) return;
+
+    setLoading(true);
+
+    const { error, paymentIntent } = await stripe.confirmPayment({
+      elements,
+      confirmParams: { return_url: window.location.origin },
+      redirect: "if_required",
+    });
+
+    if (error) {
+      setMessage(error.message || "Payment failed");
+    } else if (paymentIntent && paymentIntent.status === "succeeded") {
+      setMessage("Payment successful");
+    }
+    setLoading(false);
+  };
 
   const totalPrice = basketItems?.reduce((total, item) => {
     return total + item.price * item.quantity;
@@ -77,6 +108,10 @@ const CheckoutForm = () => {
 
   return (
     <div className="checkout_form">
+      <form>
+        <PaymentElement />
+      </form>
+
       <div className="basketSummary">
         {isLoading ? <CircularProgress /> : null}
         {error ? <p>{error.message}</p> : null}
