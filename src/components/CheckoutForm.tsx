@@ -16,13 +16,14 @@ import {
 
 const CheckoutForm = () => {
   const session = useSession();
-  const userId: string = session?.user.id as string;
+  let userId: string = "";
+
+  if (session) {
+    userId = session.user.id;
+  }
+
   const queryClient = useQueryClient();
-  const {
-    data: basketItems,
-    isLoading,
-    error,
-  } = useCartItems(session?.user.id as string);
+  const { data: basketItems, isLoading, error } = useCartItems(userId);
   const navigate = useNavigate();
 
   const [checkoutData, setCheckoutData] = useState<CheckoutData>({
@@ -108,8 +109,12 @@ const CheckoutForm = () => {
 
   return (
     <div className="checkout_form">
-      <form>
+      <form onSubmit={postPayment}>
         <PaymentElement />
+        <button type="submit" disabled={!stripe || loading}>
+          {loading ? "Processing..." : "Pay now"}
+        </button>
+        {message && <div></div>}
       </form>
 
       <div className="basketSummary">

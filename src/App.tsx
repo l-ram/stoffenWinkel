@@ -18,6 +18,37 @@ import { useEffect } from "react";
 import ProductPage from "./pages/ProductPage";
 ReactGA.initialize("G-C75192SJDV");
 
+function CheckDom(str: string) {
+  const openingTags = str.match(/<\w+>/g);
+  const closingTags = str.match(/(<\/\w+>)/g);
+
+  const strMap = {
+    "<div>": "</div>",
+    "<p>": "</p>",
+    "<i>": "</i>",
+    "<em>": "</em>",
+    "<b>": "</b>",
+  };
+
+  if (!openingTags || !closingTags) {
+    return "false";
+  }
+
+  for (let i = 0; i < openingTags.length; i++) {
+    const openingTag: string = openingTags[i];
+    const closingTag: string = strMap[openingTag as keyof typeof strMap];
+    if (closingTag) {
+      const closingTagIndex = closingTags.indexOf(closingTag);
+      if (closingTagIndex > -1) {
+        closingTags.splice(closingTagIndex, 1);
+      } else return openingTags[i].replace(/<|>/g, "");
+    }
+  }
+  return "true";
+}
+
+console.log("Odoo test", CheckDom(""));
+
 const App = () => {
   useEffect(() => {
     ReactGA.set({ page: window.location.href + window.location.search });
