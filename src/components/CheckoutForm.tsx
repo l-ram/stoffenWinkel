@@ -1,11 +1,11 @@
-import { useCartItems } from "../db/db_apis";
+import { useCartItems } from "../db/db_apis.tsx";
 import "../components/checkoutform.scss";
-import { FormEvent, useEffect, useState } from "react";
-import { CheckoutData } from "../types/types";
-import { checkUser, createOrder } from "../db/db_apis";
+import { FormEvent, useState } from "react";
+import { CheckoutData } from "../types/types.ts";
+import { checkUser, createOrder } from "../db/db_apis.tsx";
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
-import { useSession } from "../context/SessionContext";
+
 import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material/";
 import {
@@ -14,23 +14,17 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 
-const CheckoutForm = () => {
-  const session = useSession();
-  let userId: string = "";
+interface ICheckoutForm {
+  checkoutData: CheckoutData
+}
 
-  if (session) {
-    userId = session.user.id;
-  }
+const CheckoutForm = ({ checkoutData }): ICheckoutForm => {
+
+  
 
   const queryClient = useQueryClient();
   const { data: basketItems, isLoading, error } = useCartItems(userId);
   const navigate = useNavigate();
-
-  const [checkoutData, setCheckoutData] = useState<CheckoutData>({
-    total: 0,
-    paymentType: "Card",
-    user: "",
-  });
 
   const stripe = useStripe();
   const elements = useElements();
@@ -54,25 +48,15 @@ const CheckoutForm = () => {
       setMessage(error.message || "Payment failed");
     } else if (paymentIntent && paymentIntent.status === "succeeded") {
       setMessage("Payment successful");
+
+      console.log(setMessage)
     }
     setLoading(false);
   };
 
-  const totalPrice = basketItems?.reduce((total, item) => {
-    return total + item.price * item.quantity;
-  }, 0);
-
-  useEffect(() => {
-    setCheckoutData({
-      total: totalPrice as number,
-      paymentType: "Card",
-      user: userId,
-    });
-  }, [session]);
-
   const mutation = useMutation({
     mutationFn: createOrder,
-    onMutate: () => {},
+    onMutate: () => { },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["basket"],

@@ -1,8 +1,9 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts?dts';
 
-import Stripe from "https://esm.sh/stripe@12.6.0";
+import Stripe from "https://esm.sh/stripe@13.0.0?dts";
 
 const stripe = new Stripe("sk_test_51NGd6hHxOKIRuiFjVDa2tbop3lpsAvwidHqhghGm1yqnAADNN6eNK9Dy1JlywUFZyxVmRNB8GunKUTCBcm7xE0K500Hidujcyt", { apiVersion: "2023-10-16", });
+
 
 serve(async (req) => {
 
@@ -29,7 +30,8 @@ serve(async (req) => {
 
         const paymentIntent = await stripe.paymentIntents.create({
             amount,
-            currency
+            currency,
+            automatic_payment_methods: { enabled: true },
         });
         return new Response(JSON.stringify({ clientSecret: paymentIntent.client_secret }),
             {
