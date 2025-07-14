@@ -18,11 +18,7 @@ const Checkout = () => {
   );
 
   const session = useSession();
-  let userId: string = "";
-
-  if (session) {
-    userId = session.user.id;
-  }
+  const userId = session?.user?.id ?? "";
 
   const { data: basketItems, isLoading, error } = useCartItems(userId);
 
@@ -32,35 +28,34 @@ const Checkout = () => {
     user: "",
   });
 
-  const totalPrice =
-    basketItems?.reduce((total, item) => {
-      return total + item.price * item.quantity;
-    }, 0);
-
-  const formattedTotal = Number((totalPrice ?? 0).toFixed(2));
-
-  console.log(formattedTotal)
-
-
   useEffect(() => {
+
+    if (!basketItems || !userId) return;
+
+    const totalPrice =
+      basketItems?.reduce((total, item) => total + item.price * item.quantity, 0);
+
+    const formattedTotal = Number(totalPrice.toFixed(2));
+
     setCheckoutData({
-      total: Math.round(formattedTotal),
+      total: Math.round(formattedTotal * 100),
       paymentType: "Card",
       user: userId,
     });
-  }, [session]);
 
-  console.log(checkoutData);
+    console.log("total to send to Stripe:", checkoutData.total);
+
+  }, [basketItems, userId]);
 
   useEffect(() => {
+
+    if (!checkoutData.total) return;
+
     fetch(
       "https://igfmaugvvetikklloxpe.supabase.co/functions/v1/create-payment-intent",
       {
         method: "POST",
         headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization",
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_APP_SUPABASE_ANON_KEY}`,
         },
@@ -70,15 +65,10 @@ const Checkout = () => {
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret))
       .catch((error) => console.log("Error fetching clientSecret:", error));
-    console.log(checkoutData.total);
-  }, []);
-
-  const stuff = [];
-
-  fetch("url").then(res => res.json).then(data => stuff.push(data));
+  }, [checkoutData.total]);
 
   useEffect(() => {
-    ReactGA.set({ page: window.location.href + window.location.search });
+    ReactGA.set({ page: globalThis.location.href + globalThis.location.search });
     console.log("ga ran");
   }, [window.location.href]);
 

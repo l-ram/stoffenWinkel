@@ -24,11 +24,17 @@ serve(async (req) => {
         if (!amount || !currency) {
             return new Response(
                 JSON.stringify({ error: "Amount and currency are required" }),
-                { status: 400 }
+                {
+                    status: 400,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                    },
+                }
             );
         }
 
-        const paymentIntent = await stripe.paymentIntents.create({
+        const { error, paymentIntent } = await stripe.paymentIntents.create({
             amount,
             currency,
             automatic_payment_methods: { enabled: true },
@@ -44,7 +50,9 @@ serve(async (req) => {
     } catch (error) {
         return new Response(JSON.stringify({ error: error.message }), {
             status: 500,
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json", "Access-Control-Allow-Origin": "*",
+            },
         });
     }
 })

@@ -18,41 +18,16 @@ interface ICheckoutForm {
   checkoutData: CheckoutData
 }
 
-const CheckoutForm = ({ checkoutData }): ICheckoutForm => {
-
-  
+const CheckoutForm = ({ checkoutData }: ICheckoutForm) => {
 
   const queryClient = useQueryClient();
-  const { data: basketItems, isLoading, error } = useCartItems(userId);
+  const { data: basketItems, isLoading, error } = useCartItems(checkoutData.user);
   const navigate = useNavigate();
 
   const stripe = useStripe();
   const elements = useElements();
   const [message, setMessage] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
-
-  const postPayment = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!stripe || !elements) return;
-
-    setLoading(true);
-
-    const { error, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      confirmParams: { return_url: window.location.origin },
-      redirect: "if_required",
-    });
-
-    if (error) {
-      setMessage(error.message || "Payment failed");
-    } else if (paymentIntent && paymentIntent.status === "succeeded") {
-      setMessage("Payment successful");
-
-      console.log(setMessage)
-    }
-    setLoading(false);
-  };
 
   const mutation = useMutation({
     mutationFn: createOrder,
@@ -64,35 +39,57 @@ const CheckoutForm = ({ checkoutData }): ICheckoutForm => {
     },
   });
 
-  console.log("mutation:", mutation);
+  const postPayment = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const handleCheckoutFormSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-    console.log(checkoutData);
-    const correctUserData = await checkUser(checkoutData);
-    correctUserData
-      ? alert("Please update your account details before making an order")
-      : (await mutation.mutate(checkoutData), navigate("/orderConfirmation"));
-  };
+    if (!stripe || !elements) return;
 
-  const handleCheckoutChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setCheckoutData((prevCheckoutData) => {
-      const updatedTotal = basketItems?.reduce((total, item) => {
-        return total + item.price * item.quantity;
-      }, 0);
+    setLoading(true);
 
-      return {
-        ...prevCheckoutData,
-        total: updatedTotal || 0,
-        [event.target.name]: event.target.value,
-      };
+    const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
+      elements,
+      confirmParams: { return_url: globalThis.location.origin },
+      redirect: "if_required",
     });
+
+    if (stripeError) {
+      setMessage(stripeError.message || "Payment failed");
+      setLoading(false);
+      return;
+    }
+
+    if (paymentIntent?.status === "succeeded") {
+      const needsUpdate = await checkUser(checkoutData);
+      if (needsUpdate) {
+        alert("Please update your account details before making an order");
+        setLoading(false);
+        return;
+      }
+
+      mutation.mutate(checkoutData, {
+        onSuccess: () => {
+          navigate("/orderConfirmation", {
+            state: {
+              orderId: paymentIntent.id, // Optional: pass ID to page
+            },
+          });
+        },
+        onError: () => {
+          setMessage("Order creation failed after payment succeeded.");
+        },
+        onSettled: () => {
+          setLoading(false);
+        },
+      });
+    } else {
+      setMessage("Payment not completed");
+      setLoading(false);
+    }
   };
 
   return (
     <div className="checkout_form">
+      <h1>Total: €{checkoutData.total.toFixed(2)}</h1>
       <form onSubmit={postPayment}>
         <PaymentElement />
         <button type="submit" disabled={!stripe || loading}>
@@ -127,80 +124,6 @@ const CheckoutForm = ({ checkoutData }): ICheckoutForm => {
             </li>
           ))}
         </ul>
-      </div>
-
-      <div className="checkoutContainer">
-        <div className="checkout-container">
-          <h3 className="heading-3">Credit card checkout</h3>
-          <h1>Total: €{totalPrice?.toFixed(2)}</h1>
-          <div>
-            <form onSubmit={handleCheckoutFormSubmit}>
-              <label>
-                {" "}
-                Cardholders name
-                <input
-                  className="input"
-                  name="cardholdersName"
-                  type="text"
-                  required={true}
-                />
-              </label>
-              <label> Payment type</label>
-              <select
-                name="paymentType"
-                required={true}
-                onChange={handleCheckoutChange}
-              >
-                <option>Card</option>
-                <option>Paypal</option>
-              </select>
-              <br></br>
-
-              <label> Card number </label>
-              <input
-                className="input input-field"
-                name="cardNumber"
-                type="number"
-                required={true}
-              />
-
-              <label>
-                {" "}
-                Code
-                <input
-                  className="input input-field"
-                  name="code"
-                  type="number"
-                  required={true}
-                />
-              </label>
-              <label>
-                {" "}
-                Expiry date
-                <input
-                  className="input input-field"
-                  name="expiry"
-                  type="date"
-                  required={true}
-                />
-              </label>
-              <br></br>
-              <button className="checkout-btn" type="submit">
-                {"Place order"}
-              </button>
-
-              {mutation.isPending ? (
-                <div>
-                  <p>Processing order</p>
-                  <CircularProgress />
-                </div>
-              ) : null}
-              {mutation.isError ? (
-                <div>Sorry, something went wrong, try again!</div>
-              ) : null}
-            </form>
-          </div>
-        </div>
       </div>
     </div>
   );
